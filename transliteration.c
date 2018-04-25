@@ -5,10 +5,30 @@
 #include "syllable.h"
 #include "utf8.h"
 
-struct transliteration_letter *find_letter_by_code(unsigned long c,
-	struct transliteration_letter *table)
+const struct transliteration_letter *find_letter_by_code(unsigned long c,
+	const struct transliteration_letter *table)
 {
-	struct transliteration_letter *walk = table;
+	const struct transliteration_letter *walk = table;
+
+	if (c == 0)
+		return NULL;
+
+	while (walk->code != 0) {
+		if (c == walk->code)
+			return walk;
+		walk++;
+	}
+
+	return NULL;
+}
+
+const struct transliteration_modifier *find_modifier_by_code(unsigned long c,
+	const struct transliteration_modifier *table)
+{
+	const struct transliteration_modifier *walk = table;
+
+	if (c == 0)
+		return NULL;
 
 	while (walk->code != 0) {
 		if (c == walk->code)
@@ -28,7 +48,8 @@ char *transliterate_devanagari_to_latin(const char *text,
 	char *tmp;
 	unsigned long c;
 	struct syllable *head, *tail;
-	struct transliteration_letter *letter;
+	const struct transliteration_letter *letter;
+	const struct transliteration_modifier *modifier;
 
 	head = syllable_alloc("");
 	tail = head;
@@ -40,6 +61,12 @@ char *transliterate_devanagari_to_latin(const char *text,
 		letter = find_letter_by_code(c, context->table_letters);
 		if (letter != NULL) {
 			tail = syllable_append(tail, letter->data);
+			continue;
+		}
+
+		modifier = find_modifier_by_code(c, context->table_modifiers);
+		if (modifier != NULL) {
+			modifier->modifier(tail);
 			continue;
 		}
 

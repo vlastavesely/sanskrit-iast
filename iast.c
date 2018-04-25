@@ -1,5 +1,12 @@
 #include <stdlib.h>
+#include <string.h>
 #include "iast.h"
+
+void diacritics_modifier_test(struct syllable *syllable)
+{
+	free(syllable->data);
+	syllable->data = strdup("X");
+}
 
 static const struct transliteration_letter table_letters[] = {
 
@@ -62,12 +69,18 @@ static const struct transliteration_letter table_letters[] = {
 	{0, NULL}
 };
 
+static const struct transliteration_modifier table_modifiers[] = {
+	{0x0940, diacritics_modifier_test},
+	{0, NULL}
+};
+
 struct transliteration_context *transliteration_context_iast_alloc()
 {
 	struct transliteration_context *context;
 
 	context = malloc(sizeof(*context));
 	context->table_letters = table_letters;
+	context->table_modifiers = table_modifiers;
 
 	return context;
 }
