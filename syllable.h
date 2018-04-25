@@ -1,3 +1,5 @@
+/* SPDX-License-Identifier: GPL-2.0 */
+
 #ifndef __SYLLABE_H
 #define __SYLLABE_H
 
