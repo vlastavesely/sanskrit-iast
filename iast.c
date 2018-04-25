@@ -2,11 +2,64 @@
 #include <string.h>
 #include "iast.h"
 
-void diacritics_modifier_test(struct syllable *syllable)
+static inline void transliteration_modifier_apply(struct syllable *syllable,
+	const char *modified)
 {
+	char buffer[10];
+
+	strcpy(buffer, syllable->data);
+	buffer[strlen(buffer) - 1] = 0;
+	strcat(buffer, modified);
+
 	free(syllable->data);
-	syllable->data = strdup("X");
+	syllable->data = strdup(buffer);
 }
+
+static void transliteration_modifier_aa(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "ā");
+}
+
+static void transliteration_modifier_i(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "i");
+}
+
+static void transliteration_modifier_ii(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "ī");
+}
+
+static void transliteration_modifier_u(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "u");
+}
+
+static void transliteration_modifier_uu(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "ū");
+}
+
+static void transliteration_modifier_r(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "ṛ");
+}
+
+static void transliteration_modifier_rr(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "ṝ");
+}
+
+static void transliteration_modifier_e(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "e");
+}
+
+static void transliteration_modifier_virama(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "");
+}
+
 
 static const struct transliteration_letter table_letters[] = {
 
@@ -70,7 +123,15 @@ static const struct transliteration_letter table_letters[] = {
 };
 
 static const struct transliteration_modifier table_modifiers[] = {
-	{0x0940, diacritics_modifier_test},
+	{0x093e, transliteration_modifier_aa},
+	{0x093f, transliteration_modifier_i},
+	{0x0940, transliteration_modifier_ii},
+	{0x0941, transliteration_modifier_u},
+	{0x0942, transliteration_modifier_uu},
+	{0x0943, transliteration_modifier_r},
+	{0x0944, transliteration_modifier_rr},
+	{0x0947, transliteration_modifier_e},
+	{0x094d, transliteration_modifier_virama},
 	{0, NULL}
 };
 
