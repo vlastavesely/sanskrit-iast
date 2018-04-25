@@ -55,6 +55,11 @@ static void transliteration_modifier_e(struct syllable *syllable)
 	transliteration_modifier_apply(syllable, "e");
 }
 
+static void transliteration_modifier_o(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "o");
+}
+
 static void transliteration_modifier_virama(struct syllable *syllable)
 {
 	transliteration_modifier_apply(syllable, "");
@@ -131,6 +136,7 @@ static const struct transliteration_modifier table_modifiers[] = {
 	{0x0943, transliteration_modifier_r},
 	{0x0944, transliteration_modifier_rr},
 	{0x0947, transliteration_modifier_e},
+	{0x094b, transliteration_modifier_o},
 	{0x094d, transliteration_modifier_virama},
 	{0, NULL}
 };
