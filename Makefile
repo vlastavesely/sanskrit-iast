@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 all:
-	$(CC) main.c -o main
+	$(CC) main.c syllable.c -o main
 	./main
 
 clean:
