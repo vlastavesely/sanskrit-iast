@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "utf8.h"
 
-unsigned long utf8_unpack_char(char *src)
+unsigned long utf8_unpack_char(const char *src)
 {
 	unsigned long c = 0;
 

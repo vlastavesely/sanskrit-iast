@@ -1,7 +1,7 @@
 #ifndef __UTF8_H
 #define __UTF8_H
 
-unsigned long utf8_unpack_char(char *src);
+unsigned long utf8_unpack_char(const char *src);
 void utf8_pack_char(char *dest, unsigned long c);
 
 unsigned int utf8_char_length(unsigned long c);
