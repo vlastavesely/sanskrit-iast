@@ -52,6 +52,16 @@ static void transliteration_modifier_rr(struct syllable *syllable)
 	transliteration_modifier_apply(syllable, "ṝ");
 }
 
+static void transliteration_modifier_l(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "ḷ");
+}
+
+static void transliteration_modifier_ll(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "ḹ");
+}
+
 static void transliteration_modifier_e(struct syllable *syllable)
 {
 	transliteration_modifier_apply(syllable, "e");
@@ -60,6 +70,11 @@ static void transliteration_modifier_e(struct syllable *syllable)
 static void transliteration_modifier_o(struct syllable *syllable)
 {
 	transliteration_modifier_apply(syllable, "o");
+}
+
+static void transliteration_modifier_ai(struct syllable *syllable)
+{
+	transliteration_modifier_apply(syllable, "ai");
 }
 
 static void transliteration_modifier_virama(struct syllable *syllable)
@@ -137,8 +152,11 @@ static const struct transliteration_modifier table_modifiers[] = {
 	{0x0942, transliteration_modifier_uu},
 	{0x0943, transliteration_modifier_r},
 	{0x0944, transliteration_modifier_rr},
+	{0x0962, transliteration_modifier_l},
+	{0x0963, transliteration_modifier_ll},
 	{0x0947, transliteration_modifier_e},
 	{0x094b, transliteration_modifier_o},
+	{0x0948, transliteration_modifier_ai},
 	{0x094d, transliteration_modifier_virama},
 	{0, NULL}
 };
