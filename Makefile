@@ -1,12 +1,18 @@
-.PHONY: all test clean
+.PHONY: main test clean
 
-all:
-	$(CC) main.c syllable.c utf8.c transliteration.c iast.c -o main
+OBJS = syllable.o utf8.o transliteration.o iast.o
+
+
+main: main.o $(OBJS)
+	$(CC) $^ -o $@
 	./main
 
-test:
-	$(CC) test.c syllable.c utf8.c transliteration.c iast.c -o test
+test: test.o $(OBJS)
+	$(CC) $^ -o $@
 	./test
 
+%.o: %.c
+	$(CC) -MMD -MP -c $< -o $@
+
 clean:
-	$(RM) -f main
+	$(RM) main test *.o *.d
