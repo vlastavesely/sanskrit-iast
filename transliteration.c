@@ -79,3 +79,8 @@ char *transliterate_devanagari_to_latin(const char *text,
 
 	return syllable_chain_to_string(head);
 }
+
+void transliteration_context_drop(struct transliteration_context *context)
+{
+	free(context);
+}
