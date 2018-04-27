@@ -5,11 +5,9 @@ OBJS = syllable.o utf8.o transliteration.o iast.o
 
 main: main.o $(OBJS)
 	$(CC) $^ -o $@
-	./main
 
-test: test.o $(OBJS)
-	$(CC) $^ -o $@
-	./test
+test: main
+	sh test.sh
 
 %.o: %.c
 	$(CC) -MMD -MP -c $< -o $@
