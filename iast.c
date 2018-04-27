@@ -78,19 +78,19 @@ static const struct transliteration_letter table[] = {
 	{0x096f, FLAG_REGULAR, "9"},
 
 	/* Diacritic modifiers */
-	{0x093e, FLAG_MODIFIER, "ā"},
-	{0x093f, FLAG_MODIFIER, "i"},
-	{0x0940, FLAG_MODIFIER, "ī"},
-	{0x0941, FLAG_MODIFIER, "u"},
-	{0x0942, FLAG_MODIFIER, "ū"},
-	{0x0943, FLAG_MODIFIER, "ṛ"},
-	{0x0944, FLAG_MODIFIER, "ṝ"},
-	{0x0962, FLAG_MODIFIER, "ḷ"},
-	{0x0963, FLAG_MODIFIER, "ḹ"},
-	{0x0947, FLAG_MODIFIER, "e"},
-	{0x094b, FLAG_MODIFIER, "o"},
-	{0x0948, FLAG_MODIFIER, "ai"},
-	{0x094d, FLAG_MODIFIER, ""},
+	{0x093e, FLAG_MODIFIER, "ā"},		/* ा */
+	{0x093f, FLAG_MODIFIER, "i"},		/* ि */
+	{0x0940, FLAG_MODIFIER, "ī"},		/* ी */
+	{0x0941, FLAG_MODIFIER, "u"},		/* ु */
+	{0x0942, FLAG_MODIFIER, "ū"},		/* ू */
+	{0x0943, FLAG_MODIFIER, "ṛ"},		/* ृ */
+	{0x0944, FLAG_MODIFIER, "ṝ"},		/* ॄ */
+	{0x0962, FLAG_MODIFIER, "ḷ"},		/* ॢ */
+	{0x0963, FLAG_MODIFIER, "ḹ"},		/* ॣ */
+	{0x0947, FLAG_MODIFIER, "e"},		/* े */
+	{0x094b, FLAG_MODIFIER, "o"},		/* ो */
+	{0x0948, FLAG_MODIFIER, "ai"},		/* ै */
+	{0x094d, FLAG_MODIFIER, ""},		/* ् (virama) */
 
 	{0, 0, NULL}
 };
