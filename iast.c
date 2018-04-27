@@ -141,6 +141,18 @@ static const struct transliteration_letter table_letters[] = {
 	{0x0903, "ḥ"},		/* ः (visarga)  */
 	{0x093d, "'"},		/* ऽ (avagrada) */
 
+	/* Numbers */
+	{0x0966, "0"},
+	{0x0967, "1"},
+	{0x0968, "2"},
+	{0x0969, "3"},
+	{0x096a, "4"},
+	{0x096b, "5"},
+	{0x096c, "6"},
+	{0x096d, "7"},
+	{0x096e, "8"},
+	{0x096f, "9"},
+
 	{0, NULL}
 };
 
