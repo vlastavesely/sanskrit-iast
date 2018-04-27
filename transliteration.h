@@ -5,21 +5,18 @@
 
 #include "syllable.h"
 
+
+#define FLAG_REGULAR	1 << 0
+#define FLAG_MODIFIER	1 << 1
+
 struct transliteration_letter {
 	unsigned long code;
+	unsigned int flags;
 	const char *data;
 };
 
-typedef void (*syllable_modification_t)(struct syllable *syllable);
-
-struct transliteration_modifier {
-	unsigned long code;
-	syllable_modification_t modifier;
-};
-
 struct transliteration_context {
-	const struct transliteration_letter *table_letters;
-	const struct transliteration_modifier *table_modifiers;
+	const struct transliteration_letter *table;
 };
 
 char *transliterate_devanagari_to_latin(const char *text,
