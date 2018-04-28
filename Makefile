@@ -1,6 +1,6 @@
 .PHONY: main test clean
 
-OBJS = syllable.o utf8.o transliteration.o iast.o
+OBJS = syllable.o utf8.o transliteration.o iast.o iast-czech.o
 
 
 main: main.o $(OBJS)
