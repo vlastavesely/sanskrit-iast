@@ -65,6 +65,9 @@ static const struct transliteration_letter table[] = {
 	{0x0903, FLAG_REGULAR, "ḥ"},		/* ः (visarga)  */
 	{0x093d, FLAG_REGULAR, "'"},		/* ऽ (avagrada) */
 
+	/* Special characters */
+	{0x0950, FLAG_REGULAR, "aum"},		/* ॐ */
+
 	/* Numbers */
 	{0x0966, FLAG_REGULAR, "0"},
 	{0x0967, FLAG_REGULAR, "1"},
@@ -88,8 +91,9 @@ static const struct transliteration_letter table[] = {
 	{0x0962, FLAG_MODIFIER, "ḷ"},		/* ॢ */
 	{0x0963, FLAG_MODIFIER, "ḹ"},		/* ॣ */
 	{0x0947, FLAG_MODIFIER, "e"},		/* े */
-	{0x094b, FLAG_MODIFIER, "o"},		/* ो */
 	{0x0948, FLAG_MODIFIER, "ai"},		/* ै */
+	{0x094b, FLAG_MODIFIER, "o"},		/* ो */
+	{0x094c, FLAG_MODIFIER, "au"},		/* ौ */
 	{0x094d, FLAG_MODIFIER, ""},		/* ् (virama) */
 
 	{0, 0, NULL}
