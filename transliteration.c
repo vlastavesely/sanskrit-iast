@@ -43,7 +43,7 @@ char *transliterate_devanagari_to_latin(const char *text,
 	const char *ptr = text;
 	const char *end = ptr + length;
 	char *tmp;
-	unsigned int c;
+	unsigned int code;
 	struct syllable *head, *tail;
 	const struct transliteration_letter *letter;
 
@@ -51,21 +51,23 @@ char *transliterate_devanagari_to_latin(const char *text,
 	tail = head;
 
 	while (ptr < end) {
-		c = utf8_unpack_char(ptr);
-		ptr += utf8_char_length(c);
+		code = utf8_unpack_char(ptr);
+		ptr += utf8_char_length(code);
 
-		letter = find_letter_by_code(c, context->table);
+		letter = find_letter_by_code(code, context->table);
 		if (letter != NULL) {
 
-			if (letter->flags & FLAG_REGULAR)
+			if (letter->flags & FLAG_REGULAR) {
 				tail = syllable_append(tail, letter->data);
-			else if (letter->flags & FLAG_MODIFIER)
+				tail->code = code;
+			} else if (letter->flags & FLAG_MODIFIER) {
 				syllable_modify(tail, letter->data);
+			}
 
 			continue;
 		}
 
-		tmp = utf8_code_to_string(c);
+		tmp = utf8_code_to_string(code);
 		tail = syllable_append(tail, tmp);
 		free(tmp);
 	}
