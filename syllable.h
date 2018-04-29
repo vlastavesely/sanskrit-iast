@@ -5,6 +5,7 @@
 
 struct syllable {
 	char *data;
+	struct syllable *prev;
 	struct syllable *next;
 };
 

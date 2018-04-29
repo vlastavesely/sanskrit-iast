@@ -13,6 +13,7 @@ struct syllable *syllable_alloc(const char *data)
 		return NULL;
 
 	ptr->data = strdup(data);
+	ptr->prev = NULL;
 	ptr->next = NULL;
 
 	return ptr;
@@ -28,6 +29,7 @@ struct syllable *syllable_append(struct syllable *tail, const char *data)
 	struct syllable *ptr;
 
 	ptr = syllable_alloc(data);
+	ptr->prev = tail;
 	tail->next = ptr;
 
 	return ptr;
