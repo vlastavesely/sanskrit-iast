@@ -10,7 +10,7 @@
 #define FLAG_MODIFIER	1 << 1
 
 struct transliteration_letter {
-	unsigned long code;
+	unsigned int code;
 	unsigned int flags;
 	const char *data;
 };

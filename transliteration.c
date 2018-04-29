@@ -7,7 +7,7 @@
 #include "syllable.h"
 #include "utf8.h"
 
-static const struct transliteration_letter *find_letter_by_code(unsigned long c,
+static const struct transliteration_letter *find_letter_by_code(unsigned int c,
 	const struct transliteration_letter *table)
 {
 	const struct transliteration_letter *walk = table;
@@ -43,7 +43,7 @@ char *transliterate_devanagari_to_latin(const char *text,
 	const char *ptr = text;
 	const char *end = ptr + length;
 	char *tmp;
-	unsigned long c;
+	unsigned int c;
 	struct syllable *head, *tail;
 	const struct transliteration_letter *letter;
 

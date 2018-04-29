@@ -33,7 +33,7 @@ struct syllable *syllable_append(struct syllable *tail, const char *data)
 	return ptr;
 }
 
-unsigned long syllable_chain_length(struct syllable *head)
+unsigned int syllable_chain_length(struct syllable *head)
 {
 	struct syllable *walk = head;
 	unsigned int length = 0;

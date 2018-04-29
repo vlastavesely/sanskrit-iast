@@ -13,7 +13,7 @@ void syllable_drop(struct syllable *syllable);
 
 struct syllable *syllable_append(struct syllable *tail, const char *data);
 
-unsigned long syllable_chain_length(struct syllable *head);
+unsigned int syllable_chain_length(struct syllable *head);
 char *syllable_chain_to_string(struct syllable *head);
 
 #endif /* __SYLLABE_H */

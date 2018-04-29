@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include "utf8.h"
 
-unsigned long utf8_unpack_char(const char *src)
+unsigned int utf8_unpack_char(const char *src)
 {
-	unsigned long c = 0;
+	unsigned int c = 0;
 
 	if ((src[0] & 0x80) == 0x00) {
 		c  = ((src[0] & 0x7f) <<  0);
@@ -26,7 +26,7 @@ unsigned long utf8_unpack_char(const char *src)
 	return c;
 }
 
-void utf8_pack_char(char *dest, unsigned long c)
+void utf8_pack_char(char *dest, unsigned int c)
 {
 	if (c <= 0x00007f) {
 		dest[0] = c;
@@ -47,7 +47,7 @@ void utf8_pack_char(char *dest, unsigned long c)
 	}
 }
 
-unsigned int utf8_char_length(unsigned long c)
+unsigned int utf8_char_length(unsigned int c)
 {
 	if (c <= 0x00007f) {
 		return 1;
@@ -62,7 +62,7 @@ unsigned int utf8_char_length(unsigned long c)
 	return 0; // should not happen
 }
 
-char *utf8_code_to_string(unsigned long c)
+char *utf8_code_to_string(unsigned int c)
 {
 	unsigned int length = utf8_char_length(c) + 1;
 	char *buffer;
