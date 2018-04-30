@@ -107,7 +107,7 @@ static void nasal_consonants_filter(struct syllable *chain)
 	struct syllable *syllable = chain;
 
 	while (syllable) {
-		if (is_devanagari(syllable->code) && syllable->data[0] == 'n') {
+		if (is_devanagari(syllable->code) && strcmp(syllable->data, "n") == 0) {
 			if (syllable->next != NULL) {
 				if (syllable->next->data[0] == 'p' ||
 				    syllable->next->data[0] == 'b' ||
@@ -118,7 +118,7 @@ static void nasal_consonants_filter(struct syllable *chain)
 			}
 		}
 
-		if (is_devanagari(syllable->code) && syllable->data[0] == 'm') {
+		if (is_devanagari(syllable->code) && strcmp(syllable->data, "m") == 0) {
 			if (syllable->next != NULL) {
 				if (syllable->next->data[0] != 'p' &&
 				    syllable->next->data[0] != 'b' &&
