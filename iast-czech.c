@@ -137,12 +137,19 @@ static void nasal_consonants_filter(struct syllable *chain)
 static void end_of_word_filter(struct syllable *chain)
 {
 	struct syllable *syllable = chain;
+	unsigned int n;
 
 	while (syllable) {
 		if (syllable->next == NULL || isspace(syllable->next->data[0])) {
 			if (!strcmp(syllable->data, "m")) {
 				free(syllable->data);
 				syllable->data = strdup("");
+			}
+
+			n = strlen(syllable->data);
+			if (!strcmp(syllable->data + n - 2, "á")) {
+				syllable->data[n - 2] = 'a';
+				syllable->data[n - 1] = '\0';
 			}
 		}
 
