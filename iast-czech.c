@@ -101,12 +101,23 @@ static const struct transliteration_letter table[] = {
 	{0, 0, NULL}
 };
 
+static void dummy_filter(struct syllable *chain)
+{
+	printf("%s%s\n", chain->next->data, chain->next->next->data);
+}
+
+static const transliteration_filter_t filters[] = {
+	dummy_filter,
+	NULL
+};
+
 struct transliteration_context *transliteration_context_iast_czech_alloc()
 {
 	struct transliteration_context *context;
 
 	context = malloc(sizeof(*context));
 	context->table = table;
+	context->filters = filters;
 
 	return context;
 }

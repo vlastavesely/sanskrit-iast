@@ -9,6 +9,8 @@
 #define FLAG_REGULAR	1 << 0
 #define FLAG_MODIFIER	1 << 1
 
+typedef void (*transliteration_filter_t)(struct syllable *syllable_chain);
+
 struct transliteration_letter {
 	unsigned int code;
 	unsigned int flags;
@@ -17,6 +19,7 @@ struct transliteration_letter {
 
 struct transliteration_context {
 	const struct transliteration_letter *table;
+	const transliteration_filter_t *filters;
 };
 
 char *transliterate_devanagari_to_latin(const char *text,

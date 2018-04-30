@@ -99,12 +99,17 @@ static const struct transliteration_letter table[] = {
 	{0, 0, NULL}
 };
 
+static const transliteration_filter_t filters[] = {
+	NULL
+};
+
 struct transliteration_context *transliteration_context_iast_alloc()
 {
 	struct transliteration_context *context;
 
 	context = malloc(sizeof(*context));
 	context->table = table;
+	context->filters = filters;
 
 	return context;
 }

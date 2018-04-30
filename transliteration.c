@@ -36,6 +36,17 @@ static void syllable_modify(struct syllable *syllable, const char *data)
 	syllable->data = strdup(buffer);
 }
 
+static void apply_transliteration_filters(struct syllable *head,
+	const transliteration_filter_t *filters)
+{
+	const transliteration_filter_t *filter = filters;
+
+	while (*filter) {
+		(*filter)(head);
+		filter++;
+	}
+}
+
 char *transliterate_devanagari_to_latin(const char *text,
 	struct transliteration_context *context)
 {
@@ -71,6 +82,8 @@ char *transliterate_devanagari_to_latin(const char *text,
 		tail = syllable_append(tail, tmp);
 		free(tmp);
 	}
+
+	apply_transliteration_filters(head, context->filters);
 
 	return syllable_chain_to_string(head);
 }
