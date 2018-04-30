@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "iast-czech.h"
 #include "transliteration.h"
@@ -133,8 +134,25 @@ static void nasal_consonants_filter(struct syllable *chain)
 	}
 }
 
+static void end_of_word_filter(struct syllable *chain)
+{
+	struct syllable *syllable = chain;
+
+	while (syllable) {
+		if (syllable->next == NULL || isspace(syllable->next->data[0])) {
+			if (!strcmp(syllable->data, "m")) {
+				free(syllable->data);
+				syllable->data = strdup("");
+			}
+		}
+
+		syllable = syllable->next;
+	}
+}
+
 static const transliteration_filter_t filters[] = {
 	nasal_consonants_filter,
+	end_of_word_filter,
 	NULL
 };
 
