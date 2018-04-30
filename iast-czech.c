@@ -63,7 +63,7 @@ static const struct transliteration_letter table[] = {
 	{0x0935, FLAG_REGULAR, "va"},		/* व */
 
 	/* Codas */
-	{0x0902, FLAG_REGULAR, "ṃ"},		/* ं (anusvara) */
+	{0x0902, FLAG_REGULAR, "m"},		/* ं (anusvara) */
 	{0x0903, FLAG_REGULAR, ""},		/* ः (visarga)  */
 	{0x093d, FLAG_REGULAR, "'"},		/* ऽ (avagrada) */
 
@@ -101,13 +101,40 @@ static const struct transliteration_letter table[] = {
 	{0, 0, NULL}
 };
 
-static void dummy_filter(struct syllable *chain)
+static void nasal_consonants_filter(struct syllable *chain)
 {
-	printf("%s%s\n", chain->next->data, chain->next->next->data);
+	struct syllable *syllable = chain;
+
+	while (syllable) {
+		if (is_devanagari(syllable->code) && syllable->data[0] == 'n') {
+			if (syllable->next != NULL) {
+				if (syllable->next->data[0] == 'p' ||
+				    syllable->next->data[0] == 'b' ||
+				    syllable->next->data[0] == 'm') {
+					free(syllable->data);
+					syllable->data = strdup("m");
+				}
+			}
+		}
+
+		if (is_devanagari(syllable->code) && syllable->data[0] == 'm') {
+			if (syllable->next != NULL) {
+				if (syllable->next->data[0] != 'p' &&
+				    syllable->next->data[0] != 'b' &&
+				    syllable->next->data[0] != 'm') {
+					free(syllable->data);
+					syllable->data = strdup("n");
+				}
+			}
+		}
+
+
+		syllable = syllable->next;
+	}
 }
 
 static const transliteration_filter_t filters[] = {
-	dummy_filter,
+	nasal_consonants_filter,
 	NULL
 };
 

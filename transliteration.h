@@ -27,4 +27,9 @@ char *transliterate_devanagari_to_latin(const char *text,
 
 void transliteration_context_drop(struct transliteration_context *context);
 
+static inline int is_devanagari(unsigned int code)
+{
+	return code >= 0x0900 && code <= 0x097f;
+}
+
 #endif /* __TRANSLITERATION_H */
