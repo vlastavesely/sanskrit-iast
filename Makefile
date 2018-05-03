@@ -7,7 +7,7 @@ main: main.o $(OBJS)
 	$(CC) $^ -o $@
 
 test: main
-	sh test.sh
+	sh tests/test.sh
 
 %.o: %.c
 	$(CC) -MMD -MP -c $< -o $@
