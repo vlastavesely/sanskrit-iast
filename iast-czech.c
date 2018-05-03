@@ -18,11 +18,11 @@ static const struct transliteration_letter table[] = {
 	{0x0907, FLAG_REGULAR, "i"},		/* इ */
 	{0x0908, FLAG_REGULAR, "í"},		/* ई */
 	{0x0909, FLAG_REGULAR, "u"},		/* उ */
-	{0x090a, FLAG_REGULAR, "ū"},		/* ऊ */
+	{0x090a, FLAG_REGULAR, "ú"},		/* ऊ */
 	{0x090b, FLAG_REGULAR, "r"},		/* ऋ */
-	{0x0960, FLAG_REGULAR, "ṝ"},		/* ॠ */
-	{0x090c, FLAG_REGULAR, "ḷ"},		/* ऌ */
-	{0x0961, FLAG_REGULAR, "ḹ"},		/* ॡ */
+	{0x0960, FLAG_REGULAR, "r"},		/* ॠ */
+	{0x090c, FLAG_REGULAR, "l"},		/* ऌ */
+	{0x0961, FLAG_REGULAR, "l"},		/* ॡ */
 	{0x090f, FLAG_REGULAR, "é"},		/* ए */
 	{0x0910, FLAG_REGULAR, "ai"},		/* ऐ */
 	{0x0913, FLAG_REGULAR, "ó"},		/* ओ */
@@ -33,13 +33,13 @@ static const struct transliteration_letter table[] = {
 	{0x0916, FLAG_REGULAR, "kha"},		/* ख */
 	{0x0917, FLAG_REGULAR, "ga"},		/* ग */
 	{0x0918, FLAG_REGULAR, "gha"},		/* घ */
-	{0x0919, FLAG_REGULAR, "ṅa"},		/* ङ */
+	{0x0919, FLAG_REGULAR, "na"},		/* ङ */
 	{0x0939, FLAG_REGULAR, "ha"},		/* ह */
 	{0x091a, FLAG_REGULAR, "ca"},		/* च */
 	{0x091b, FLAG_REGULAR, "cha"},		/* छ */
 	{0x091c, FLAG_REGULAR, "dža"},		/* ज */
 	{0x091d, FLAG_REGULAR, "džha"},		/* झ */
-	{0x091e, FLAG_REGULAR, "ña"},		/* ञ */
+	{0x091e, FLAG_REGULAR, "ňa"},		/* ञ */
 	{0x092f, FLAG_REGULAR, "ja"},		/* य */
 	{0x0936, FLAG_REGULAR, "ša"},		/* श */
 	{0x091F, FLAG_REGULAR, "ta"},		/* ट */
@@ -88,11 +88,11 @@ static const struct transliteration_letter table[] = {
 	{0x093f, FLAG_MODIFIER, "i"},		/* ि */
 	{0x0940, FLAG_MODIFIER, "í"},		/* ी */
 	{0x0941, FLAG_MODIFIER, "u"},		/* ु */
-	{0x0942, FLAG_MODIFIER, "ū"},		/* ू */
+	{0x0942, FLAG_MODIFIER, "ú"},		/* ू */
 	{0x0943, FLAG_MODIFIER, "r"},		/* ृ */
-	{0x0944, FLAG_MODIFIER, "ṝ"},		/* ॄ */
-	{0x0962, FLAG_MODIFIER, "ḷ"},		/* ॢ */
-	{0x0963, FLAG_MODIFIER, "ḹ"},		/* ॣ */
+	{0x0944, FLAG_MODIFIER, "r"},		/* ॄ */
+	{0x0962, FLAG_MODIFIER, "l"},		/* ॢ */
+	{0x0963, FLAG_MODIFIER, "l"},		/* ॣ */
 	{0x0947, FLAG_MODIFIER, "é"},		/* े */
 	{0x0948, FLAG_MODIFIER, "ai"},		/* ै */
 	{0x094b, FLAG_MODIFIER, "ó"},		/* ो */
