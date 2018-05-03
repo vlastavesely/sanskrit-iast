@@ -1,0 +1,12 @@
+Sanskrit Transliteration Tool
+=============================
+This is a tool for romanization of sanskrit texts written in the devanagari
+script. The program offers you two different modes of transliteration: by
+default, it transliterates a devanagari text using the International Alphabet
+of Sanskrit Transliteration (IAST); alternatively, it can be used for
+simplified transliteration into czech language.
+
+
+Licensing notice
+----------------
+This software is released under the GPL License, version 2.
