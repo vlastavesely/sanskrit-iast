@@ -1,4 +1,4 @@
-.PHONY: main test clean
+.PHONY: main test install uninstall clean
 
 OBJS = syllable.o utf8.o transliteration.o iast.o iast-czech.o
 
@@ -11,6 +11,12 @@ test: iast
 
 %.o: %.c
 	$(CC) -MMD -MP -c $< -o $@
+
+install:
+	install -m 0755 iast /usr/bin
+
+uninstall:
+	rm -f /usr/bin/iast
 
 clean:
 	$(RM) iast *.o *.d
