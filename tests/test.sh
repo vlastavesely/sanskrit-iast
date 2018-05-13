@@ -3,7 +3,7 @@ set -e
 
 test_word()
 {
-	transliterated=$(echo -n "$1" | ./main $3)
+	transliterated=$(echo -n "$1" | ./iast $3 --)
 	expected="$2"
 
 	if test "x$transliterated" = "x$expected"

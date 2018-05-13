@@ -3,14 +3,14 @@
 OBJS = syllable.o utf8.o transliteration.o iast.o iast-czech.o
 
 
-main: main.o $(OBJS)
+iast: main.o $(OBJS)
 	$(CC) $^ -o $@
 
-test: main
+test: iast
 	sh tests/test.sh
 
 %.o: %.c
 	$(CC) -MMD -MP -c $< -o $@
 
 clean:
-	$(RM) main test *.o *.d
+	$(RM) iast *.o *.d

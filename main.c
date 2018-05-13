@@ -8,25 +8,48 @@
 #include "iast.h"
 #include "iast-czech.h"
 
-#define FLAG_CZECH	1 << 0
+#define FLAG_STDIN	1 << 0
+#define FLAG_CZECH	1 << 1
+
+
+static char *stdin_read()
+{
+	char buffer[1024];
+	unsigned int n, length = 0;;
+	char *text = NULL;
+
+	while ((n = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0) {
+		if (text == NULL)
+			text = malloc(n + 1);
+		else
+			text = realloc(text, length + n + 1);
+		strncpy(text + length, buffer, n);
+		length += n;
+	}
+
+	if (n == -1)
+		return NULL;
+
+	return text;
+}
 
 int main(int argc, const char **argv)
 {
-	struct transliteration_context *context;
-	unsigned int n, length = 0;
 	int i, retval = 0;
-	char buffer[6];
-	char *text = malloc(0);
-	char *out;
+	unsigned int flags = 0, n = 0;
 	const char *arg;
-	unsigned int flags = 0;
+	const char *queue[argc];
+	char *input, *output;
+	struct transliteration_context *context;
 
-
-	for (i = 0; i < argc; i++) {
+	for (i = 1; i < argc; i++) {
 		arg = argv[i];
 
 		if (*arg == '-') {
 			switch (arg[1]) {
+			case '-':
+				flags |= FLAG_STDIN;
+				continue;
 			case 'c':
 				flags |= FLAG_CZECH;
 				continue;
@@ -34,35 +57,38 @@ int main(int argc, const char **argv)
 
 			fprintf(stderr, "error: unknown option '%s'\n", arg);
 			exit(1);
+		} else {
+			queue[n++] = arg;
 		}
 	}
 
-
-	while ((n = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0) {
-		text = realloc(text, length + n + 1);
-		strncpy(text + length, buffer, n);
-		length += n;
-	}
-	if (n == -1) {
-		retval = -errno;
-		goto out;
-	}
-
-	text[length] = '\0';
-
-	if (flags & FLAG_CZECH) {
+	if (flags & FLAG_CZECH)
 		context = transliteration_context_iast_czech_alloc();
-	} else {
+	else
 		context = transliteration_context_iast_alloc();
+
+	if (flags & FLAG_STDIN) {
+		input = stdin_read();
+		if (input == NULL) {
+			fprintf(stderr, "[iast] failed to read from STDIN.\n");
+			retval = -1;
+			goto out;
+		}
+
+		output = transliterate_devanagari_to_latin(input, context);
+		fprintf(stdout, "%s\n", output);
+		free(output);
+		free(input);
 	}
 
-	out = transliterate_devanagari_to_latin(text, context);
-	printf("%s\n", out);
-
-	transliteration_context_drop(context);
-	free(text);
-	free(out);
+	for (i = 0; i < n; i++) {
+		output = transliterate_devanagari_to_latin(queue[i], context);
+		fprintf(stdout, "%s\n", output);
+		free(output);
+	}
 
 out:
+	transliteration_context_drop(context);
+
 	return retval;
 }
