@@ -10,18 +10,23 @@ struct syllable *syllable_alloc(const char *data)
 	struct syllable *ptr = malloc(sizeof(*ptr));
 
 	if (ptr == NULL)
-		return NULL;
+		goto out;
 
 	ptr->data = strdup(data);
 	ptr->code = 0;
 	ptr->prev = NULL;
 	ptr->next = NULL;
 
+out:
 	return ptr;
 }
 
 void syllable_drop(struct syllable *ptr)
 {
+	if (ptr == NULL)
+		return;
+
+	free(ptr->data);
 	free(ptr);
 }
 

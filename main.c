@@ -62,10 +62,9 @@ int main(int argc, const char **argv)
 		}
 	}
 
-	if (flags & FLAG_CZECH)
-		context = transliteration_context_iast_czech_alloc();
-	else
-		context = transliteration_context_iast_alloc();
+	context = (flags & FLAG_CZECH)
+		? transliteration_context_iast_czech_alloc()
+		: transliteration_context_iast_alloc();
 
 	if (flags & FLAG_STDIN) {
 		input = stdin_read();
