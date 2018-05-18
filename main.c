@@ -7,9 +7,11 @@
 #include "transliteration.h"
 #include "iast.h"
 #include "iast-czech.h"
+#include "encoder.h"
 
 #define FLAG_STDIN	1 << 0
 #define FLAG_CZECH	1 << 1
+#define FLAG_ENCODE	1 << 2
 
 
 static char *stdin_read()
@@ -53,6 +55,9 @@ int main(int argc, const char **argv)
 			case 'c':
 				flags |= FLAG_CZECH;
 				continue;
+			case 'e':
+				flags |= FLAG_ENCODE;
+				continue;
 			}
 
 			fprintf(stderr, "error: unknown option '%s'\n", arg);
@@ -60,6 +65,15 @@ int main(int argc, const char **argv)
 		} else {
 			queue[n++] = arg;
 		}
+	}
+
+	if (flags & FLAG_ENCODE) {
+		for (i = 0; i < n; i++) {
+			output = encode_iast_punctation(queue[i]);
+			fprintf(stdout, "%s\n", output);
+			free(output);
+		}
+		goto out;
 	}
 
 	context = (flags & FLAG_CZECH)
@@ -71,7 +85,7 @@ int main(int argc, const char **argv)
 		if (input == NULL) {
 			fprintf(stderr, "[iast] failed to read from STDIN.\n");
 			retval = -1;
-			goto out;
+			goto drop_context;
 		}
 
 		output = transliterate_devanagari_to_latin(input, context);
@@ -86,8 +100,8 @@ int main(int argc, const char **argv)
 		free(output);
 	}
 
-out:
+drop_context:
 	transliteration_context_drop(context);
-
+out:
 	return retval;
 }
