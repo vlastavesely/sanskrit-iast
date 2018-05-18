@@ -1,6 +1,6 @@
 .PHONY: main test install uninstall clean
 
-OBJS = syllable.o utf8.o transliteration.o iast.o iast-czech.o
+OBJS = syllable.o utf8.o transliteration.o iast.o iast-czech.o encoder.o
 
 
 iast: main.o $(OBJS)
