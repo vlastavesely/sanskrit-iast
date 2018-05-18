@@ -17,5 +17,6 @@ struct syllable *syllable_append(struct syllable *tail, const char *data);
 
 unsigned int syllable_chain_length(struct syllable *head);
 char *syllable_chain_to_string(struct syllable *head);
+void syllable_chain_drop(struct syllable *head);
 
 #endif /* __SYLLABE_H */

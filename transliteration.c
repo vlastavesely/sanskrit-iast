@@ -85,7 +85,10 @@ char *transliterate_devanagari_to_latin(const char *text,
 
 	apply_transliteration_filters(head, context->filters);
 
-	return syllable_chain_to_string(head);
+	tmp = syllable_chain_to_string(head);
+	syllable_chain_drop(head);
+
+	return tmp;
 }
 
 void transliteration_context_drop(struct transliteration_context *context)

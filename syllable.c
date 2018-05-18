@@ -69,3 +69,14 @@ char *syllable_chain_to_string(struct syllable *head)
 
 	return buffer;
 }
+
+void syllable_chain_drop(struct syllable *head)
+{
+	struct syllable *walk = head, *next;
+
+	while (walk) {
+		next = walk->next;
+		syllable_drop(walk);
+		walk = next;
+	}
+}
