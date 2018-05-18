@@ -14,6 +14,31 @@
 #define FLAG_ENCODE	1 << 2
 
 
+const char *usage_str =
+	"iast, a sanskrit transliteration helper.\n"
+	"\n"
+	"usage:\n"
+	"  iast [flags and text arguments in any order]\n"
+	"\n"
+	"options:\n"
+	"  -h     shows this help\n"
+	"  -c     transliterate to czech language\n"
+	"  -e     convert symbolic ASCII text to IAST representation\n"
+	"  --     read data from the standard input\n"
+	"\n"
+	"  By default, `iast` takes all input arguments written in Devanagari\n"
+	"  and transliterates them to IAST version.\n"
+	"\n"
+	"  When flag `-e` is set up, the program converts purely ASCII-encoded\n"
+	"  strings into special characters of IAST alphabet. For example, it\n"
+	"  converts `sam.skr.tam` to `saṃskṛtam` or `s,a-stram` to `śāstram`.\n";
+
+static void usage()
+{
+	fprintf(stdout, "%s\n", usage_str);
+	exit(0);
+}
+
 static char *stdin_read()
 {
 	char buffer[1024];
@@ -58,6 +83,8 @@ int main(int argc, const char **argv)
 			case 'e':
 				flags |= FLAG_ENCODE;
 				continue;
+			case 'h':
+				usage();
 			}
 
 			fprintf(stderr, "error: unknown option '%s'\n", arg);
