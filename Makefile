@@ -1,9 +1,10 @@
 .PHONY: main test install uninstall clean
 
-OBJS = syllable.o utf8.o transliteration.o iast.o iast-czech.o encoder.o
+SRCFILES := $(shell find . -type f -name "*.c")
+OBJFILES := $(patsubst %.c, %.o, $(SRCFILES))
 
 
-iast: main.o $(OBJS)
+iast: main.o $(OBJFILES)
 	$(CC) $^ -o $@
 
 test: iast
