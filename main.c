@@ -36,7 +36,6 @@ const char *usage_str =
 static void usage()
 {
 	fprintf(stdout, "%s\n", usage_str);
-	exit(0);
 }
 
 static char *stdin_read()
@@ -67,7 +66,7 @@ int main(int argc, const char **argv)
 	const char *arg;
 	const char *queue[argc];
 	char *input, *output;
-	struct transliteration_context *context;
+	const struct transliteration_context *context;
 
 	for (i = 1; i < argc; i++) {
 		arg = argv[i];
@@ -85,6 +84,7 @@ int main(int argc, const char **argv)
 				continue;
 			case 'h':
 				usage();
+				goto out;
 			}
 
 			fprintf(stderr, "error: unknown option '%s'\n", arg);
@@ -104,15 +104,15 @@ int main(int argc, const char **argv)
 	}
 
 	context = (flags & FLAG_CZECH)
-		? transliteration_context_iast_czech_alloc()
-		: transliteration_context_iast_alloc();
+		? get_iast_czech_transliteration_context()
+		: get_iast_transliteration_context();
 
 	if (flags & FLAG_STDIN) {
 		input = stdin_read();
 		if (input == NULL) {
 			fprintf(stderr, "[iast] failed to read from STDIN.\n");
 			retval = -1;
-			goto drop_context;
+			goto out;
 		}
 
 		output = transliterate_devanagari_to_latin(input, context);
@@ -127,8 +127,6 @@ int main(int argc, const char **argv)
 		free(output);
 	}
 
-drop_context:
-	transliteration_context_drop(context);
 out:
 	return retval;
 }

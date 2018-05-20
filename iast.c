@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "iast.h"
 #include "transliteration.h"
@@ -103,13 +102,12 @@ static const transliteration_filter_t filters[] = {
 	NULL
 };
 
-struct transliteration_context *transliteration_context_iast_alloc()
+static const struct transliteration_context context = {
+	.table = table,
+	.filters = filters
+};
+
+const struct transliteration_context *get_iast_transliteration_context()
 {
-	struct transliteration_context *context;
-
-	context = malloc(sizeof(*context));
-	context->table = table;
-	context->filters = filters;
-
-	return context;
+	return &context;
 }

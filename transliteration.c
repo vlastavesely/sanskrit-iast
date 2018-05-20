@@ -48,7 +48,7 @@ static void apply_transliteration_filters(struct syllable *head,
 }
 
 char *transliterate_devanagari_to_latin(const char *text,
-	struct transliteration_context *context)
+	const struct transliteration_context *context)
 {
 	unsigned int length = strlen(text);
 	const char *ptr = text;
@@ -89,9 +89,4 @@ char *transliterate_devanagari_to_latin(const char *text,
 	syllable_chain_drop(head);
 
 	return tmp;
-}
-
-void transliteration_context_drop(struct transliteration_context *context)
-{
-	free(context);
 }

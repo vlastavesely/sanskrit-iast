@@ -163,13 +163,12 @@ static const transliteration_filter_t filters[] = {
 	NULL
 };
 
-struct transliteration_context *transliteration_context_iast_czech_alloc()
+static const struct transliteration_context context = {
+	.table = table,
+	.filters = filters
+};
+
+const struct transliteration_context *get_iast_czech_transliteration_context()
 {
-	struct transliteration_context *context;
-
-	context = malloc(sizeof(*context));
-	context->table = table;
-	context->filters = filters;
-
-	return context;
+	return &context;
 }
