@@ -14,7 +14,7 @@
 #define FLAG_ENCODE	1 << 2
 
 
-const char *usage_str =
+static const char *usage_str =
 	"iast, a sanskrit transliteration helper.\n"
 	"\n"
 	"usage:\n"

@@ -33,7 +33,7 @@ static const struct encoder_tuple table[] = {
 	{NULL, NULL}
 };
 
-const struct encoder_tuple *find_tuple(const char *text)
+static const struct encoder_tuple *find_tuple(const char *text)
 {
 	const struct encoder_tuple *walk = table;
 
