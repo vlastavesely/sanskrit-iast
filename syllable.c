@@ -3,17 +3,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "syllable.h"
+#include "utf8.h"
 
 
-struct syllable *syllable_alloc(const char *data)
+struct syllable *syllable_alloc(const char *data, unsigned int code)
 {
 	struct syllable *ptr = malloc(sizeof(*ptr));
 
 	if (ptr == NULL)
 		goto out;
 
-	ptr->data = strdup(data);
-	ptr->code = 0;
+	ptr->data = data != NULL ? strdup(data) : utf8_code_to_string(code);
+	ptr->code = code;
 	ptr->prev = NULL;
 	ptr->next = NULL;
 
@@ -28,17 +29,6 @@ void syllable_drop(struct syllable *ptr)
 
 	free(ptr->data);
 	free(ptr);
-}
-
-struct syllable *syllable_append(struct syllable *tail, const char *data)
-{
-	struct syllable *ptr;
-
-	ptr = syllable_alloc(data);
-	ptr->prev = tail;
-	tail->next = ptr;
-
-	return ptr;
 }
 
 unsigned int syllable_chain_length(struct syllable *head)
