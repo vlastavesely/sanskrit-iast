@@ -1,3 +1,5 @@
+PREFIX=/usr
+
 .PHONY: main test install uninstall clean
 
 SRCFILES := $(shell find . -type f -name "*.c")
@@ -14,10 +16,10 @@ test: iast
 	$(CC) -MMD -MP -c $< -o $@
 
 install:
-	install -m 0755 iast /usr/bin
+	install -m 0755 iast $(PREFIX)/bin
 
 uninstall:
-	rm -f /usr/bin/iast
+	rm -f $(PREFIX)/bin/iast
 
 clean:
 	$(RM) iast *.o *.d
