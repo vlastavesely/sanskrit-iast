@@ -59,6 +59,9 @@ char *encode_iast_punctation(const char *text)
 	char *buf, *dest;
 
 	buf = malloc(strlen(text) << 1);
+	if (buf == NULL)
+		return NULL;
+
 	buf[0] = 0;
 	dest = buf;
 

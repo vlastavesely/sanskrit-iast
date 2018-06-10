@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdarg.h>
 #include <errno.h>
 
 #include "transliteration.h"
@@ -9,24 +10,26 @@
 #include "iast-czech.h"
 #include "encoder.h"
 
+#define PROGNAME "iast"
+
 #define FLAG_STDIN	1 << 0
 #define FLAG_CZECH	1 << 1
 #define FLAG_ENCODE	1 << 2
 
 
 static const char *usage_str =
-	"iast, a sanskrit transliteration helper.\n"
+	PROGNAME ", a helper for Sanskrit transliteration.\n"
 	"\n"
 	"usage:\n"
-	"  iast [flags and text arguments in any order]\n"
+	"  " PROGNAME " [flags and text arguments in any order]\n"
 	"\n"
 	"options:\n"
 	"  -h     shows this help\n"
-	"  -c     transliterate to czech language\n"
+	"  -c     transliterate to Czech language\n"
 	"  -e     convert symbolic ASCII text to IAST representation\n"
 	"  --     read data from the standard input\n"
 	"\n"
-	"  By default, `iast` takes all input arguments written in Devanagari\n"
+	"  By default, `" PROGNAME "` takes all input arguments written in Devanagari\n"
 	"  and transliterates them to IAST version.\n"
 	"\n"
 	"  When flag `-e` is set up, the program converts purely ASCII-encoded\n"
@@ -38,6 +41,17 @@ static void usage()
 	fprintf(stdout, "%s\n", usage_str);
 }
 
+static void error(const char *msg, ...)
+{
+	va_list params;
+	char buf[256];
+
+	va_start(params, msg);
+	vsnprintf(buf, sizeof(buf), msg, params);
+	fprintf(stderr, "[" PROGNAME "] error: %s\n", buf);
+	va_end(params);
+}
+
 static char *stdin_read()
 {
 	char buffer[1024];
@@ -45,10 +59,11 @@ static char *stdin_read()
 	char *text = NULL;
 
 	while ((n = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0) {
+
+		text = realloc(text, length + n + 1);
 		if (text == NULL)
-			text = malloc(n + 1);
-		else
-			text = realloc(text, length + n + 1);
+			return NULL;
+
 		strncpy(text + length, buffer, n);
 		length += n;
 	}
@@ -61,7 +76,7 @@ static char *stdin_read()
 
 int main(int argc, const char **argv)
 {
-	int i, retval = 0;
+	int i;
 	unsigned int flags = 0, n = 0;
 	const char *arg;
 	const char *queue[argc];
@@ -84,11 +99,11 @@ int main(int argc, const char **argv)
 				continue;
 			case 'h':
 				usage();
-				goto out;
+				return 0;
 			}
 
-			fprintf(stderr, "error: unknown option '%s'\n", arg);
-			exit(1);
+			error("unknown option '%s'.", arg);
+			return -1;
 		} else {
 			queue[n++] = arg;
 		}
@@ -100,7 +115,7 @@ int main(int argc, const char **argv)
 			fprintf(stdout, "%s\n", output);
 			free(output);
 		}
-		goto out;
+		return 0;
 	}
 
 	context = (flags & FLAG_CZECH)
@@ -110,9 +125,8 @@ int main(int argc, const char **argv)
 	if (flags & FLAG_STDIN) {
 		input = stdin_read();
 		if (input == NULL) {
-			fprintf(stderr, "[iast] failed to read from STDIN.\n");
-			retval = -1;
-			goto out;
+			error("failed to read from standard input.");
+			return -1;
 		}
 
 		output = transliterate_devanagari_to_latin(input, context);
@@ -127,6 +141,5 @@ int main(int argc, const char **argv)
 		free(output);
 	}
 
-out:
-	return retval;
+	return 0;
 }
