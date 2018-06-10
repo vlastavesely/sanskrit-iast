@@ -11,6 +11,7 @@
 #include "encoder.h"
 
 #define PROGNAME "iast"
+#define VERSION "0.1"
 
 #define FLAG_STDIN	1 << 0
 #define FLAG_CZECH	1 << 1
@@ -24,7 +25,8 @@ static const char *usage_str =
 	"  " PROGNAME " [flags and text arguments in any order]\n"
 	"\n"
 	"options:\n"
-	"  -h     shows this help\n"
+	"  -h     shows this help and exits\n"
+	"  -v     shows version number and exits\n"
 	"  -c     transliterate to Czech language\n"
 	"  -e     convert symbolic ASCII text to IAST representation\n"
 	"  --     read data from the standard input\n"
@@ -36,9 +38,14 @@ static const char *usage_str =
 	"  strings into special characters of IAST alphabet. For example, it\n"
 	"  converts `sam.skr.tam` to `saṃskṛtam` or `s,a-stram` to `śāstram`.\n";
 
-static void usage()
+static void print_usage()
 {
 	fprintf(stdout, "%s\n", usage_str);
+}
+
+static void print_version()
+{
+	fprintf(stdout, PROGNAME " v" VERSION "\n");
 }
 
 static void error(const char *msg, ...)
@@ -98,7 +105,10 @@ int main(int argc, const char **argv)
 				flags |= FLAG_ENCODE;
 				continue;
 			case 'h':
-				usage();
+				print_usage();
+				return 0;
+			case 'v':
+				print_version();
 				return 0;
 			}
 
