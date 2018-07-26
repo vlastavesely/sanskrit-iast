@@ -1,3 +1,4 @@
 /iast
+/doc/*.gz
 /*.o
 /*.d

@@ -1,0 +1,75 @@
+iast(1)
+=======
+:manmanual: sanskrit-iast
+
+NAME
+----
+iast - a helper for Sanskrit transliteration
+
+
+SYNOPSIS
+--------
+--------------------------------------------------------------------------------
+iast [-h] [-v] [-e] [-c] [--] [text arguments]
+--------------------------------------------------------------------------------
+
+OPTIONS
+-------
+*-h*::
+show help and exit
+
+*-v*::
+show version number and exit
+
+*-c*::
+use Czech transliteration instead of plain IAST scheme
+
+*-e*::
+convert symbolic ASCII text to IAST representation
+
+*--*::
+read data from the standard input
+
+
+DESCRIPTION
+-----------
+iast is a tool for the lossless transliteration of Sanskrit terms written in
+Devanagari into Latin using the International Alphabet of Sanskrit
+Transliteration (IAST).
+
+By default, the program takes all input arguments written in Devanagari and
+transliterates them to IAST version.
+
+
+ENCODING
+--------
+When the flag "-e" is set on, the program converts purely ASCII-encoded strings
+into the special characters of the IAST alphabet. For example, it converts
+"sam.skr.tam" to "saṃskṛtam" or "s,a-stram" to "śāstram".
+
+The encoding scheme is based on the following principle: characters "-", ".",
+"," and "~" are considered to be modifiers that modify a letter that stands
+before the modifier. For example, if the string to be encoded contains "a-",
+it will be encoded as "ā" and sequence "n~" as "ñ". The only exception from
+the rule is the letter "n" because it can be encoded both with an over-dot (ṅ)
+and under-dot (ṇ). For the over-dot variant, the conversion sequence is "n^.".
+
+Alternatively, the Czech characters "á", "í", "ú", "š" and "ň" can be used as
+shortcuts to encode the letters "ā", "ī", "ū", "ś" and "ñ" respectively.
+
+
+COPYRIGHT
+---------
+Copyright (c) 2018  Vlasta Vesely
+
+
+LICENSING AND WARRANTY
+----------------------
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License version 2 as published
+by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
