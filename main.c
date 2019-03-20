@@ -119,15 +119,6 @@ int main(int argc, const char **argv)
 		}
 	}
 
-	if (flags & FLAG_ENCODE) {
-		for (i = 0; i < n; i++) {
-			output = encode_iast_punctation(queue[i]);
-			fprintf(stdout, "%s\n", output);
-			free(output);
-		}
-		return 0;
-	}
-
 	context = (flags & FLAG_CZECH)
 		? get_iast_czech_transliteration_context()
 		: get_iast_transliteration_context();
@@ -139,14 +130,24 @@ int main(int argc, const char **argv)
 			return -1;
 		}
 
-		output = transliterate_devanagari_to_latin(input, context);
+		if (flags & FLAG_ENCODE) {
+			output = encode_iast_punctation(input);
+		} else {
+			output = transliterate_devanagari_to_latin(input, context);
+		}
+
 		fprintf(stdout, "%s\n", output);
 		free(output);
 		free(input);
 	}
 
 	for (i = 0; i < n; i++) {
-		output = transliterate_devanagari_to_latin(queue[i], context);
+		if (flags & FLAG_ENCODE) {
+			output = encode_iast_punctation(queue[i]);
+		} else {
+			output = transliterate_devanagari_to_latin(queue[i], context);
+		}
+
 		fprintf(stdout, "%s\n", output);
 		free(output);
 	}
