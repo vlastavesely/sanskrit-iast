@@ -1,4 +1,5 @@
+*.o
+*.d
 /iast
+/tests/test
 /doc/*.gz
-/*.o
-/*.d
