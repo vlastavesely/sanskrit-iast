@@ -12,7 +12,7 @@ TEST_LIBS    = $(LIBS) $(shell pkg-config --libs check)
 
 all: iast doc/iast.1.gz
 
-iast: main.o $(OBJFILES)
+iast: main.o $(OBJECTS)
 	$(CC) $^ -o $@ $(CFLAGS)
 
 test: tests/test

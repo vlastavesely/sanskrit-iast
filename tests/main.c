@@ -24,8 +24,14 @@ int main(void)
 	suite = create_test_suite();
 	runner = srunner_create(suite);
 
+	puts("-----------------------------------------");
 	srunner_run_all(runner, CK_NORMAL);
 	retval = srunner_ntests_failed(runner);
+	puts("-----------------------------------------");
+
+	puts(retval == 0 ? "\033[32mpassed\033[0m\n"
+			 : "\033[31mfailed\033[0m\n");
+
 	srunner_free(runner);
 
 	return retval;

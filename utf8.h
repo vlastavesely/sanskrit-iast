@@ -3,6 +3,8 @@
 #ifndef __UTF8_H
 #define __UTF8_H
 
+#define UNICODE_MAX_LENGTH 4
+
 unsigned int utf8_unpack_char(const char *src);
 void utf8_pack_char(char *dest, unsigned int c);
 

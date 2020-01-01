@@ -6,7 +6,6 @@
 #include <errno.h>
 
 #include "transliteration.h"
-#include "iast.h"
 #include "encoder.h"
 
 #define PROGNAME "iast"
