@@ -6,6 +6,7 @@
 #include "utf8.h"
 
 #define SCHWA_CHARACTER 'a'
+#define VIRAMA 0x094d
 #define CHUNKSIZE 1024
 
 static struct translit_letter *letter_by_code(struct translit_letter *table,
@@ -22,8 +23,7 @@ static struct translit_letter *letter_by_code(struct translit_letter *table,
 
 char *transliterate_devanagari_to_latin(const char *devanagari)
 {
-	struct translit_letter *table;
-	struct translit_letter *letter;
+	struct translit_letter *table, *letter;
 	unsigned int c, alloc = 0, done = 0, len;
 	const char *src = devanagari;
 	char *latin = NULL;
@@ -69,4 +69,82 @@ char *transliterate_devanagari_to_latin(const char *devanagari)
 	}
 
 	return latin;
+}
+
+static struct translit_letter *letter_by_data(struct translit_letter *table,
+					      const char *data)
+{
+	while (table->code != 0) {
+		unsigned int len = strlen(table->data);
+		if (len && strncmp(table->data, data, len) == 0)
+			return table;
+		table++;
+	}
+
+	return NULL;
+}
+
+static struct translit_letter *vowel_sign_by_data(struct translit_letter *table,
+						  const char *data)
+{
+	while (table->code != 0) {
+		unsigned int len = strlen(table->data);
+		if (len && strncmp(table->data, data, len) == 0 &&
+		    table->type == VOWEL_SIGN)
+			return table;
+		table++;
+	}
+
+	return NULL;
+}
+
+char *transliterate_latin_to_devanagari(const char *latin)
+{
+	struct translit_letter *table, *letter, *next;
+	unsigned int alloc = 0, done = 0, len;
+	const char *src = latin;
+	char *devanagari = NULL;
+
+	table = get_iast_transliteration_table();
+
+	while (*src) {
+		if (alloc < done + UNICODE_MAX_LENGTH) {
+			devanagari = realloc(devanagari, alloc + CHUNKSIZE);
+			alloc += CHUNKSIZE;
+		}
+
+		letter = letter_by_data(table, src);
+		if (letter) {
+			utf8_pack_char(devanagari + done, letter->code);
+			len = utf8_char_length(letter->code);
+			done += len;
+			src += strlen(letter->data);
+
+			if (letter->type == VOWEL || letter->type == CODA)
+				continue;
+
+			next = vowel_sign_by_data(table, src);
+			if (next) {
+				utf8_pack_char(devanagari + done, next->code);
+				done += utf8_char_length(next->code);
+				src += strlen(next->data);
+			} else {
+				if (*src == SCHWA_CHARACTER) {
+					src++;
+				} else {
+					if (letter->type == CONSONANT) {
+						utf8_pack_char(devanagari + done, VIRAMA);
+						done += utf8_char_length(VIRAMA);
+					}
+				}
+			}
+		} else {
+			devanagari[done++] = *src++;
+		}
+	}
+
+	if (devanagari)
+		devanagari[done] = '\0';
+
+	return devanagari;
 }

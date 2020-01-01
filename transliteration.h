@@ -23,6 +23,7 @@ struct translit_context {
 };
 
 char *transliterate_devanagari_to_latin(const char *text);
+char *transliterate_latin_to_devanagari(const char *text);
 
 static inline int is_devanagari(unsigned int code)
 {

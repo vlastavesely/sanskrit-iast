@@ -6,6 +6,9 @@
 
 static struct translit_letter table[] = {
 
+	/* Special characters */
+	{0x0950, SPECIAL, "aum"},        /* aum */
+
 	/* Vowels */
 	{0x0910, VOWEL, "ai"},           /* 01 */
 	{0x0914, VOWEL, "au"},           /* 02 */
@@ -61,9 +64,6 @@ static struct translit_letter table[] = {
 	{0x0902, CODA, "\u1e43"},        /* anusvara (.m) */
 	{0x0903, CODA, "\u1e25"},        /* visarga (.h) */
 	{0x093d, CODA, "'"},             /* avagrada (') */
-
-	/* Special characters */
-	{0x0950, SPECIAL, "aum"},        /* aum */
 
 	/* Numbers */
 	{0x0966, NUMBER, "0"},
