@@ -5,20 +5,25 @@
 
 #include "syllable.h"
 
-
-#define FLAG_REGULAR	1 << 0
-#define FLAG_MODIFIER	1 << 1
+enum translit_letter_type {
+	VOWEL,
+	CONSONANT,
+	CODA,
+	SPECIAL,
+	NUMBER,
+	VOWEL_SIGN
+};
 
 typedef void (*transliteration_filter_t)(struct syllable *syllable_chain);
 
-struct transliteration_letter {
+struct translit_letter {
 	unsigned int code;
-	unsigned int flags;
+	enum translit_letter_type type;
 	const char *data;
 };
 
-struct transliteration_context {
-	const struct transliteration_letter *table;
+struct translit_context {
+	const struct translit_letter *table;
 	const transliteration_filter_t *filters;
 };
 

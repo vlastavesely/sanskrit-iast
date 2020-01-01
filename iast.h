@@ -5,6 +5,6 @@
 
 #include "transliteration.h"
 
-const struct transliteration_context *get_iast_transliteration_context();
+struct translit_context *get_iast_transliteration_context();
 
 #endif /* __IAST_H */
