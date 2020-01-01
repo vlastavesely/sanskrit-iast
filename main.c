@@ -7,7 +7,6 @@
 
 #include "transliteration.h"
 #include "iast.h"
-#include "iast-czech.h"
 #include "encoder.h"
 
 #define PROGNAME "iast"
@@ -88,7 +87,6 @@ int main(int argc, const char **argv)
 	const char *arg;
 	const char *queue[argc];
 	char *input, *output;
-	const struct transliteration_context *context;
 
 	for (i = 1; i < argc; i++) {
 		arg = argv[i];
@@ -119,10 +117,6 @@ int main(int argc, const char **argv)
 		}
 	}
 
-	context = (flags & FLAG_CZECH)
-		? get_iast_czech_transliteration_context()
-		: get_iast_transliteration_context();
-
 	if (flags & FLAG_STDIN) {
 		input = stdin_read();
 		if (input == NULL) {
@@ -133,7 +127,7 @@ int main(int argc, const char **argv)
 		if (flags & FLAG_ENCODE) {
 			output = encode_iast_punctation(input);
 		} else {
-			output = transliterate_devanagari_to_latin(input, context);
+			output = transliterate_devanagari_to_latin(input);
 		}
 
 		fprintf(stdout, "%s\n", output);
@@ -145,7 +139,7 @@ int main(int argc, const char **argv)
 		if (flags & FLAG_ENCODE) {
 			output = encode_iast_punctation(queue[i]);
 		} else {
-			output = transliterate_devanagari_to_latin(queue[i], context);
+			output = transliterate_devanagari_to_latin(queue[i]);
 		}
 
 		fprintf(stdout, "%s\n", output);

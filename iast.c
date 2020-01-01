@@ -4,7 +4,7 @@
 #include "compat.h"
 #include "iast.h"
 
-static const struct translit_letter table[] = {
+static struct translit_letter table[] = {
 
 	/* Vowels */
 	{0x0910, VOWEL, "ai"},           /* 01 */
@@ -96,16 +96,7 @@ static const struct translit_letter table[] = {
 	{0, 0, NULL}
 };
 
-static const transliteration_filter_t filters[] = {
-	NULL
-};
-
-static struct translit_context context = {
-	.table = table,
-	.filters = filters
-};
-
-struct translit_context *get_iast_transliteration_context()
+struct translit_letter *get_iast_transliteration_table()
 {
-	return &context;
+	return table;
 }

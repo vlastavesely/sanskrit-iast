@@ -3,8 +3,6 @@
 #ifndef __TRANSLITERATION_H
 #define __TRANSLITERATION_H
 
-#include "syllable.h"
-
 enum translit_letter_type {
 	VOWEL,
 	CONSONANT,
@@ -14,8 +12,6 @@ enum translit_letter_type {
 	VOWEL_SIGN
 };
 
-typedef void (*transliteration_filter_t)(struct syllable *syllable_chain);
-
 struct translit_letter {
 	unsigned int code;
 	enum translit_letter_type type;
@@ -23,12 +19,10 @@ struct translit_letter {
 };
 
 struct translit_context {
-	const struct translit_letter *table;
-	const transliteration_filter_t *filters;
+	struct translit_letter *table;
 };
 
-char *transliterate_devanagari_to_latin(const char *text,
-	const struct transliteration_context *context);
+char *transliterate_devanagari_to_latin(const char *text);
 
 static inline int is_devanagari(unsigned int code)
 {
