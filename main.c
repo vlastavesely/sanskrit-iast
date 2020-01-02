@@ -1,19 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdarg.h>
-#include <errno.h>
-
+#include "compat.h"
 #include "transliteration.h"
+#include "transcription.h"
 #include "encoder.h"
 
 #define PROGNAME "iast"
-#define VERSION "0.1"
+#define VERSION "1.0"
 
 #define FLAG_STDIN	1 << 0
-#define FLAG_CZECH	1 << 1
+#define FLAG_REVERSE	1 << 1
 #define FLAG_ENCODE	1 << 2
+#define FLAG_CZECH	1 << 3
 
 
 static const char *usage_str =
@@ -25,8 +21,9 @@ static const char *usage_str =
 	"options:\n"
 	"  -h     shows this help and exits\n"
 	"  -v     shows version number and exits\n"
-	"  -c     transliterate to Czech language\n"
+	"  -r     reverse transliteration (from Latin to Devanagari)\n"
 	"  -e     convert symbolic ASCII text to IAST representation\n"
+	"  -c     transcript Devanagari to Czech language\n"
 	"  --     read data from the standard input\n"
 	"\n"
 	"  By default, `" PROGNAME "` takes all input arguments written in Devanagari\n"
@@ -79,6 +76,19 @@ static char *stdin_read()
 	return text;
 }
 
+static char *process_input(const char *input, unsigned int flags)
+{
+	if (flags & FLAG_ENCODE) {
+		return encode_iast_punctation(input);
+	} else if (flags & FLAG_REVERSE) {
+		return transliterate_latin_to_devanagari(input);
+	} else if (flags & FLAG_CZECH) {
+		return transcript_devanagari_to_czech(input);
+	} else {
+		return transliterate_devanagari_to_latin(input);
+	}
+}
+
 int main(int argc, const char **argv)
 {
 	int i;
@@ -86,6 +96,11 @@ int main(int argc, const char **argv)
 	const char *arg;
 	const char *queue[argc];
 	char *input, *output;
+
+	if (argc == 1) {
+		print_usage();
+		return -1;
+	}
 
 	for (i = 1; i < argc; i++) {
 		arg = argv[i];
@@ -95,11 +110,14 @@ int main(int argc, const char **argv)
 			case '-':
 				flags |= FLAG_STDIN;
 				continue;
-			case 'c':
-				flags |= FLAG_CZECH;
+			case 'r':
+				flags |= FLAG_REVERSE;
 				continue;
 			case 'e':
 				flags |= FLAG_ENCODE;
+				continue;
+			case 'c':
+				flags |= FLAG_CZECH;
 				continue;
 			case 'h':
 				print_usage();
@@ -123,11 +141,7 @@ int main(int argc, const char **argv)
 			return -1;
 		}
 
-		if (flags & FLAG_ENCODE) {
-			output = encode_iast_punctation(input);
-		} else {
-			output = transliterate_devanagari_to_latin(input);
-		}
+		output = process_input(input, flags);
 
 		fprintf(stdout, "%s\n", output);
 		free(output);
@@ -135,11 +149,7 @@ int main(int argc, const char **argv)
 	}
 
 	for (i = 0; i < n; i++) {
-		if (flags & FLAG_ENCODE) {
-			output = encode_iast_punctation(queue[i]);
-		} else {
-			output = transliterate_devanagari_to_latin(queue[i]);
-		}
+		output = process_input(queue[i], flags);
 
 		fprintf(stdout, "%s\n", output);
 		free(output);
