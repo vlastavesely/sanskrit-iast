@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0 */
+/* https://cs.wikipedia.org/wiki/Wikipedie:Transkripce_hind%C5%A1tiny */
 
 #include "compat.h"
 #include "transcription.h"

@@ -21,8 +21,11 @@ show help and exit
 *-v*::
 show version number and exit
 
+*-r*::
+reverse transliteration (from Latin to Devanagari)
+
 *-c*::
-use Czech transliteration instead of plain IAST scheme
+transcript into Czech
 
 *-e*::
 convert symbolic ASCII text to IAST representation
@@ -60,7 +63,7 @@ shortcuts to encode the letters "ā", "ī", "ū", "ś" and "ñ" respectively.
 
 COPYRIGHT
 ---------
-Copyright (c) 2018  Vlasta Vesely
+Copyright (c) 2018, 2020  Vlasta Vesely
 
 
 LICENSING AND WARRANTY
@@ -69,7 +72,6 @@ This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 2 as published
 by the Free Software Foundation.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
