@@ -2,8 +2,8 @@ PREFIX=/usr
 
 .PHONY: main test install uninstall clean
 
-OBJECTS      = iast.o transliteration.o utf8.o encoder.o
-TEST_OBJECTS = tests/main.o tests/translit.o
+OBJECTS      = iast.o iast-czech.o transliteration.o transcription.o utf8.o encoder.o
+TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o
 CFLAGS       = -Wall
 LIBS         =
 TEST_CFLAGS  = $(CFLAGS) $(shell pkg-config --cflags check)
