@@ -134,6 +134,11 @@ int main(int argc, const char **argv)
 		}
 	}
 
+	if (flags != FLAG_REVERSE && flags != FLAG_CZECH && flags != FLAG_ENCODE) {
+		error("options '-r', '-e' and '-c' are mutually exclusive.");
+		return -1;
+	}
+
 	if (flags & FLAG_STDIN) {
 		input = stdin_read();
 		if (input == NULL) {
