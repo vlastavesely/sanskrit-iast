@@ -1,4 +1,4 @@
-PREFIX=/usr
+PREFIX=/usr/local
 
 .PHONY: main test install uninstall clean
 
@@ -31,6 +31,7 @@ doc/%.gz: doc/%.adoc
 	asciidoctor -d manpage -b manpage $< -o $(<:.adoc=) && gzip -f $(<:.adoc=)
 
 install:
+	install -m 0755 -d $(PREFIX)/bin $(PREFIX)/share/man/man1
 	install -m 0755 iast $(PREFIX)/bin
 	install -m 644 doc/iast.1.gz $(PREFIX)/share/man/man1
 
@@ -39,4 +40,4 @@ uninstall:
 	rm -f $(PREFIX)/share/man/man1/$(PROGNAME).1.gz
 
 clean:
-	$(RM) iast *.o *.d doc/*.gz
+	$(RM) iast *.o */*.o *.d */*.d doc/*.gz
