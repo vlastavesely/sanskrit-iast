@@ -1,0 +1,13 @@
+image: debian
+
+stages:
+  - test
+
+before_script:
+  - apt update
+  - apt install -y make gcc pkg-config check
+
+test:
+  stage: test
+  script:
+    - make test
