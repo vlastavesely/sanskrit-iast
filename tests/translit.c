@@ -2,51 +2,49 @@
 #include "translit.h"
 #include "../transliteration.h"
 
+static void test_transliterate_devanagari_to_latin(const char *devanagari,
+						   const char *latin)
+{
+	char *str = transliterate_devanagari_to_latin(devanagari);
+	ck_assert_str_eq(latin, str);
+	free(str);
+}
+
+static void test_transliterate_latin_to_devanagari(const char *latin,
+						   const char *devanagari)
+{
+	char *str = transliterate_latin_to_devanagari(latin);
+	ck_assert_str_eq(devanagari, str);
+	free(str);
+}
+
 START_TEST(test_translit_devanagari_to_latin)
 {
-	char *latin;
-
 	/* https://en.wikipedia.org/wiki/Sanskrit */
-	latin = transliterate_devanagari_to_latin("संस्कृतम्");
-	ck_assert_str_eq("saṃskṛtam", latin);
-	free(latin);
+	test_transliterate_devanagari_to_latin("संस्कृतम्", "saṃskṛtam");
 
 	/* https://en.wikipedia.org/wiki/Bhagavad_Gita */
-	latin = transliterate_devanagari_to_latin("भगवद्गीता");
-	ck_assert_str_eq("bhagavadgītā", latin);
-	free(latin);
+	test_transliterate_devanagari_to_latin("भगवद्गीता", "bhagavadgītā");
 
 	/* https://en.wikipedia.org/wiki/%C4%80ry%C4%81varta */
-	latin = transliterate_devanagari_to_latin("आर्यावर्त");
-	ck_assert_str_eq("āryāvarta", latin);
-	free(latin);
+	test_transliterate_devanagari_to_latin("आर्यावर्त", "āryāvarta");
 
 	/* https://en.wikipedia.org/wiki/Mahabharata */
-	latin = transliterate_devanagari_to_latin("महाभारतम्");
-	ck_assert_str_eq("mahābhāratam", latin);
-	free(latin);
+	test_transliterate_devanagari_to_latin("महाभारतम्", "mahābhāratam");
+
+	/* https://en.wikipedia.org/wiki/Devanagari */
+	test_transliterate_devanagari_to_latin("देवनागरी", "devanāgarī");
+
 }
 END_TEST
 
 START_TEST(test_translit_latin_to_devanagari)
 {
-	char *devanagari;
-
-	devanagari = transliterate_latin_to_devanagari("saṃskṛtam");
-	ck_assert_str_eq("संस्कृतम्", devanagari);
-	free(devanagari);
-
-	devanagari = transliterate_latin_to_devanagari("bhagavadgītā");
-	ck_assert_str_eq("भगवद्गीता", devanagari);
-	free(devanagari);
-
-	devanagari = transliterate_latin_to_devanagari("āryāvarta");
-	ck_assert_str_eq("आर्यावर्त", devanagari);
-	free(devanagari);
-
-	devanagari = transliterate_latin_to_devanagari("mahābhāratam");
-	ck_assert_str_eq("महाभारतम्", devanagari);
-	free(devanagari);
+	test_transliterate_latin_to_devanagari("saṃskṛtam", "संस्कृतम्");
+	test_transliterate_latin_to_devanagari("bhagavadgītā", "भगवद्गीता");
+	test_transliterate_latin_to_devanagari("āryāvarta", "आर्यावर्त");
+	test_transliterate_latin_to_devanagari("mahābhāratam", "महाभारतम्");
+	test_transliterate_latin_to_devanagari("devanāgarī", "देवनागरी");
 }
 END_TEST
 

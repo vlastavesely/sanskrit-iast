@@ -2,29 +2,24 @@
 #include "transcript.h"
 #include "../transcription.h"
 
+static void test_transcript(const char *devanagari, const char *latin)
+{
+	char *czech = transcript_devanagari_to_czech(devanagari);
+	ck_assert_str_eq(latin, czech);
+	free(czech);
+}
+
 START_TEST(test_transcript_devanagari_to_czech)
 {
-	char *czech;
+	test_transcript("तन्त्रशास्त्रम्", "tantrašástra");
 
-	czech = transcript_devanagari_to_czech("तन्त्रशास्त्रम्");
-	ck_assert_str_eq("tantrašástra", czech);
-	free(czech);
+	test_transcript("सांख्य", "sánkhja");
 
-	czech = transcript_devanagari_to_czech("सांख्य");
-	ck_assert_str_eq("sánkhja", czech);
-	free(czech);
+	test_transcript("महाभारतम्", "mahábhárata");
 
-	czech = transcript_devanagari_to_czech("महाभारतम्");
-	ck_assert_str_eq("mahábhárata", czech);
-	free(czech);
+	test_transcript("योगः", "jóga");
 
-	czech = transcript_devanagari_to_czech("योगः");
-	ck_assert_str_eq("jóga", czech);
-	free(czech);
-
-	czech = transcript_devanagari_to_czech("भगवद्गीता");
-	ck_assert_str_eq("bhagavadgíta", czech);
-	free(czech);
+	test_transcript("भगवद्गीता", "bhagavadgíta");
 }
 END_TEST
 

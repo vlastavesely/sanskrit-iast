@@ -1,6 +1,7 @@
 #include "test.h"
 #include "translit.h"
 #include "transcript.h"
+#include "encoder.h"
 
 static Suite *create_test_suite()
 {
@@ -12,6 +13,7 @@ static Suite *create_test_suite()
 
 	register_translit_tests(test_case);
 	register_transcript_tests(test_case);
+	register_encoder_tests(test_case);
 	suite_add_tcase(suite, test_case);
 
 	return suite;

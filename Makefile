@@ -3,7 +3,7 @@ PREFIX=/usr/local
 .PHONY: main test install uninstall clean
 
 OBJECTS      = iast.o iast-czech.o transliteration.o transcription.o utf8.o encoder.o
-TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o
+TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o tests/encoder.o
 CFLAGS       = -Wall
 LIBS         =
 TEST_CFLAGS  = $(CFLAGS) $(shell pkg-config --cflags check)
@@ -40,4 +40,4 @@ uninstall:
 	rm -f $(PREFIX)/share/man/man1/$(PROGNAME).1.gz
 
 clean:
-	$(RM) iast *.o */*.o *.d */*.d doc/*.gz
+	$(RM) iast tests/test *.o */*.o *.d */*.d doc/*.gz
