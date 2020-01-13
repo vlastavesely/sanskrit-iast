@@ -10,7 +10,7 @@ iast - a helper for Sanskrit transliteration
 SYNOPSIS
 --------
 --------------------------------------------------------------------------------
-iast [-h] [-v] [-e] [-c] [--] [text arguments]
+iast [-h] [-v] [-f file] [-r] [-e] [-c] [text arguments]
 --------------------------------------------------------------------------------
 
 OPTIONS
@@ -21,6 +21,9 @@ show help and exit
 *-v*::
 show version number and exit
 
+*-f*::
+input file for processing
+
 *-r*::
 reverse transliteration (from Latin to Devanagari)
 
@@ -29,9 +32,6 @@ transcript into Czech
 
 *-e*::
 convert symbolic ASCII text to IAST representation
-
-*--*::
-read data from the standard input
 
 
 DESCRIPTION
@@ -63,14 +63,14 @@ shortcuts to encode the letters "ā", "ī", "ū", "ś" and "ñ" respectively.
 
 COPYRIGHT
 ---------
-Copyright (c) 2018, 2020  Vlasta Vesely
+Copyright (c) 2018, 2020  Vlasta Vesely <vlastavesely@protonmail.ch>
 
 
 LICENSING AND WARRANTY
 ----------------------
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License version 2 as published
-by the Free Software Foundation.
+This software is released under the terms of the GPL license version 2 as
+published by the Free Software Foundation. You can freely redistribute and/or
+modify the software under the terms of the license.
 
 This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
