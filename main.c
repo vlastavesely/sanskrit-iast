@@ -6,11 +6,9 @@
 #define PROGNAME "iast"
 #define VERSION "1.0"
 
-#define FLAG_STDIN	1 << 0
-#define FLAG_REVERSE	1 << 1
-#define FLAG_ENCODE	1 << 2
-#define FLAG_CZECH	1 << 3
-
+#define FLAG_REVERSE	1 << 0
+#define FLAG_ENCODE	1 << 1
+#define FLAG_CZECH	1 << 2
 
 static const char *usage_str =
 	PROGNAME ", a helper for Sanskrit transliteration.\n"
@@ -54,28 +52,6 @@ static void error(const char *msg, ...)
 	va_end(params);
 }
 
-static char *stdin_read()
-{
-	char buffer[1024];
-	unsigned int n, length = 0;;
-	char *text = NULL;
-
-	while ((n = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0) {
-
-		text = realloc(text, length + n + 1);
-		if (text == NULL)
-			return NULL;
-
-		strncpy(text + length, buffer, n);
-		length += n;
-	}
-
-	if (n == -1)
-		return NULL;
-
-	return text;
-}
-
 static char *process_input(const char *input, unsigned int flags)
 {
 	if (flags & FLAG_ENCODE) {
@@ -89,12 +65,60 @@ static char *process_input(const char *input, unsigned int flags)
 	}
 }
 
+#define CHUNKSIZE 1024
+static int read_fd(char **out, int fd)
+{
+	int n, alloc = 0, space, len = 0;
+	char *buf = NULL;
+
+	while (1) {
+		space = alloc - len;
+		if (space == 0) {
+			space = CHUNKSIZE;
+			alloc += space;
+			buf = realloc(buf, alloc + 1); /* + 1 is '\0' */
+		}
+		n = read(fd, buf + len, space);
+		if (n > 0) {
+			len += n;
+			continue;
+		} else if (n == 0) {
+			break;
+		}
+
+		free(buf);
+		return -errno;
+	}
+
+	if (buf)
+		buf[len] = '\0';
+
+	*out = buf;
+
+	return 0;
+}
+
+static int read_file(char **out, const char *path)
+{
+	int fd, retval;
+
+	fd = open(path, O_RDONLY);
+	if (fd == -1)
+		return -errno;
+
+	retval = read_fd(out, fd);
+	close(fd);
+
+	return retval;
+}
+
 int main(int argc, const char **argv)
 {
-	int i;
-	unsigned int flags = 0, n = 0;
+	int i, retval;
 	const char *arg;
-	const char *queue[argc];
+	const char *files[argc], *texts[argc];
+	unsigned int nfiles = 0, ntexts = 0;
+	unsigned int flags = 0;
 	char *input, *output;
 
 	if (argc == 1) {
@@ -107,9 +131,6 @@ int main(int argc, const char **argv)
 
 		if (*arg == '-') {
 			switch (arg[1]) {
-			case '-':
-				flags |= FLAG_STDIN;
-				continue;
 			case 'r':
 				flags |= FLAG_REVERSE;
 				continue;
@@ -118,6 +139,9 @@ int main(int argc, const char **argv)
 				continue;
 			case 'c':
 				flags |= FLAG_CZECH;
+				continue;
+			case 'f':
+				files[nfiles++] = argv[++i];
 				continue;
 			case 'h':
 				print_usage();
@@ -130,35 +154,31 @@ int main(int argc, const char **argv)
 			error("unknown option '%s'.", arg);
 			return -1;
 		} else {
-			queue[n++] = arg;
+			texts[ntexts++] = arg;
 		}
 	}
 
-	if (flags != FLAG_REVERSE && flags != FLAG_CZECH && flags != FLAG_ENCODE) {
-		error("options '-r', '-e' and '-c' are mutually exclusive.");
-		return -1;
+	for (i = 0; i < ntexts; i++) {
+		output = process_input(texts[i], flags);
+		fprintf(stdout, "%s\n", output);
+		free(output);
 	}
 
-	if (flags & FLAG_STDIN) {
-		input = stdin_read();
-		if (input == NULL) {
-			error("failed to read from standard input.");
-			return -1;
+	for (i = 0; i < nfiles; i++) {
+		if (strcmp(files[i], "-") == 0)
+			retval = read_fd(&input, STDIN_FILENO);
+		else
+			retval = read_file(&input, files[i]);
+		if (retval != 0) {
+			error("failed to read file '%s'.", files[i]);
+			return retval;
 		}
 
 		output = process_input(input, flags);
-
-		fprintf(stdout, "%s\n", output);
+		fprintf(stdout, "%s", output);
 		free(output);
 		free(input);
-	}
-
-	for (i = 0; i < n; i++) {
-		output = process_input(queue[i], flags);
-
-		fprintf(stdout, "%s\n", output);
-		free(output);
-	}
+ 	}
 
 	return 0;
 }
