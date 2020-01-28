@@ -15,8 +15,9 @@ all: iast doc/iast.1.gz
 iast: main.o $(OBJECTS)
 	$(CC) $^ -o $@ $(CFLAGS)
 
-test: tests/test
+test: iast tests/test
 	tests/test
+	sh tests/integration.sh
 
 %.o: %.c
 	$(CC) -MMD -MP -c $< -o $@ $(CFLAGS)
