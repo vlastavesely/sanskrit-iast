@@ -2,4 +2,4 @@
 *.d
 /iast
 /tests/test
-/doc/*.gz
+*.1.gz

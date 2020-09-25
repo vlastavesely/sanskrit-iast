@@ -19,17 +19,18 @@ static const char *usage_str =
 	"options:\n"
 	"  -h     shows this help and exits\n"
 	"  -v     shows version number and exits\n"
+	"  -f     specifies file for conversion\n"
 	"  -r     reverse transliteration (from Latin to Devanagari)\n"
 	"  -e     convert symbolic ASCII text to IAST representation\n"
 	"  -c     transcript Devanagari to Czech language\n"
 	"  --     read data from the standard input\n"
 	"\n"
-	"  By default, `" PROGNAME "` takes all input arguments written in Devanagari\n"
-	"  and transliterates them to IAST version.\n"
+	"  By default, ‘" PROGNAME "’ takes all input arguments written in Devanagari\n"
+	"  and transliterates them to the IAST version.\n"
 	"\n"
-	"  When flag `-e` is set up, the program converts purely ASCII-encoded\n"
-	"  strings into special characters of IAST alphabet. For example, it\n"
-	"  converts `sam.skr.tam` to `saṃskṛtam` or `s,a-stram` to `śāstram`.\n";
+	"  When the flag ‘-e’ is set up, the program converts purely ASCII-encoded\n"
+	"  strings into the special characters of the IAST alphabet. For example, it\n"
+	"  converts ‘sam.skr.tam’ to ‘saṃskṛtam’ or ‘s,a-stram’ to ‘śāstram’.\n";
 
 static void print_usage()
 {
@@ -178,7 +179,7 @@ int main(int argc, const char **argv)
 		fprintf(stdout, "%s", output);
 		free(output);
 		free(input);
- 	}
+	}
 
 	return 0;
 }

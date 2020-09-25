@@ -1,16 +1,24 @@
-PREFIX=/usr/local
+SHELL        = /bin/sh
+CC           = gcc
 
-.PHONY: main test install uninstall clean
+PREFIX       = /usr/local
+BINDIR       = $(PREFIX)/bin
+MANDIR       = $(PREFIX)/share/man
 
 OBJECTS      = iast.o iast-czech.o transliteration.o transcription.o utf8.o encoder.o
 TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o tests/encoder.o
 CFLAGS       = -Wall
 LIBS         =
+
 TEST_CFLAGS  = $(CFLAGS) $(shell pkg-config --cflags check)
-TEST_LIBS    = $(LIBS) $(shell pkg-config --libs check)
+TEST_LIBS    = $(shell pkg-config --libs check)
 
 
-all: iast doc/iast.1.gz
+.PHONY: all main test install uninstall clean
+
+all: iast iast.1.gz
+
+include $(wildcard *.d)
 
 iast: main.o $(OBJECTS)
 	$(CC) $^ -o $@ $(CFLAGS)
@@ -28,17 +36,16 @@ tests/%.o: tests/%.c
 tests/test: $(OBJECTS) $(TEST_OBJECTS)
 	$(CC) $^ -o $@ $(TEST_CFLAGS) $(TEST_LIBS)
 
-doc/%.gz: doc/%.adoc
-	asciidoctor -d manpage -b manpage $< -o $(<:.adoc=) && gzip -f $(<:.adoc=)
+%.1.gz: %.1
+	cat $< | gzip -f >$@
 
 install:
-	install -m 0755 -d $(PREFIX)/bin $(PREFIX)/share/man/man1
-	install -m 0755 iast $(PREFIX)/bin
-	install -m 644 doc/iast.1.gz $(PREFIX)/share/man/man1
+	install -m 0755 iast $(BINDIR)
+	install -m 644 iast.1.gz $(MANDIR)/man1
 
 uninstall:
-	rm -f $(PREFIX)/bin/iast
-	rm -f $(PREFIX)/share/man/man1/$(PROGNAME).1.gz
+	rm -f $(BINDIR)/iast
+	rm -f $(MANDIR)/man1/iast.1.gz
 
 clean:
-	$(RM) iast tests/test *.o */*.o *.d */*.d doc/*.gz
+	$(RM) iast tests/test *.o */*.o *.d */*.d *.1.gz
