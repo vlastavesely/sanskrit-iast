@@ -48,8 +48,19 @@ START_TEST(test_translit_latin_to_devanagari)
 }
 END_TEST
 
+START_TEST(test_translit_lla_sylable)
+{
+	test_transliterate_devanagari_to_latin("अग्निमीळे", "agnimīḷe");
+	test_transliterate_latin_to_devanagari("agnimīḷe", "अग्निमीळे");
+
+	test_transliterate_devanagari_to_latin("चाकॢप्र", "cākḷpra");
+	test_transliterate_latin_to_devanagari("cākḷpra", "चाकॢप्र");
+}
+END_TEST
+
 void register_translit_tests(TCase *test_case)
 {
 	tcase_add_test(test_case, test_translit_devanagari_to_latin);
 	tcase_add_test(test_case, test_translit_latin_to_devanagari);
+	tcase_add_test(test_case, test_translit_lla_sylable);
 }

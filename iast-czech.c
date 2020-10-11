@@ -27,7 +27,7 @@ static struct translit_letter table[] = {
 	/* Consonants */
 	{0x0916, CONSONANT, "kh"},    /* 01 */
 	{0x0918, CONSONANT, "gh"},    /* 02 */
-	{0x091b, CONSONANT, "ch"},    /* 03 */
+	{0x091b, CONSONANT, "čh"},    /* 03 */
 	{0x091d, CONSONANT, "džh"},   /* 04 */
 	{0x091c, CONSONANT, "dž"},    /* 05 */
 	{0x0920, CONSONANT, "th"},    /* 06 */
@@ -40,7 +40,7 @@ static struct translit_letter table[] = {
 	{0x0917, CONSONANT, "g"},     /* 13 */
 	{0x0919, CONSONANT, "n"},     /* 14 */
 	{0x0939, CONSONANT, "h"},     /* 15 */
-	{0x091a, CONSONANT, "c"},     /* 16 */
+	{0x091a, CONSONANT, "č"},     /* 16 */
 	{0x091e, CONSONANT, "ň"},     /* 17 */
 	{0x092f, CONSONANT, "j"},     /* 18 */
 	{0x0936, CONSONANT, "š"},     /* 19 */
@@ -58,6 +58,7 @@ static struct translit_letter table[] = {
 	{0x092c, CONSONANT, "b"},     /* 31 */
 	{0x092e, CONSONANT, "m"},     /* 32 */
 	{0x0935, CONSONANT, "v"},     /* 33 */
+	{0x0933, CONSONANT, "l"},
 
 	/* Codas */
 	{0x0902, CODA, "m"},          /* anusvara */

@@ -20,6 +20,8 @@ START_TEST(test_transcript_devanagari_to_czech)
 	test_transcript("योगः", "jóga");
 
 	test_transcript("भगवद्गीता", "bhagavadgíta");
+
+	test_transcript("अग्निमीळे", "agnimílé");
 }
 END_TEST
 

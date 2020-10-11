@@ -113,6 +113,16 @@ char *transliterate_latin_to_devanagari(const char *latin)
 			alloc += CHUNKSIZE;
 		}
 
+		if (strncmp(src, "\u1e37", 3) == 0) {
+			letter = letter_by_data(table, src + 3);
+			if (letter && letter->type == VOWEL) {
+				utf8_pack_char(devanagari + done, 0x0933);
+				done += 3;
+				src += 3;
+				goto encode_vowel_modifier;
+			}
+		}
+
 		letter = letter_by_data(table, src);
 		if (letter) {
 			utf8_pack_char(devanagari + done, letter->code);
@@ -122,7 +132,7 @@ char *transliterate_latin_to_devanagari(const char *latin)
 
 			if (letter->type == VOWEL || letter->type == CODA)
 				continue;
-
+encode_vowel_modifier:
 			next = vowel_sign_by_data(table, src);
 			if (next) {
 				utf8_pack_char(devanagari + done, next->code);

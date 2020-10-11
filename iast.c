@@ -59,6 +59,7 @@ static struct translit_letter table[] = {
 	{0x092c, CONSONANT, "b"},        /* 31 */
 	{0x092e, CONSONANT, "m"},        /* 32 */
 	{0x0935, CONSONANT, "v"},        /* 33 */
+	{0x0933, CONSONANT, "\u1e37"},   /* (.l) */
 
 	/* Codas */
 	{0x0902, CODA, "\u1e43"},        /* anusvara (.m) */
