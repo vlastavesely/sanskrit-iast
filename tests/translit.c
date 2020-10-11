@@ -58,9 +58,17 @@ START_TEST(test_translit_lla_sylable)
 }
 END_TEST
 
+START_TEST(test_translit_candrabindu)
+{
+	test_transliterate_devanagari_to_latin("तान्यजत्राँ", "tānyajatrām̐");
+	test_transliterate_latin_to_devanagari("tānyajatrām̐", "तान्यजत्राँ");
+}
+END_TEST
+
 void register_translit_tests(TCase *test_case)
 {
 	tcase_add_test(test_case, test_translit_devanagari_to_latin);
 	tcase_add_test(test_case, test_translit_latin_to_devanagari);
 	tcase_add_test(test_case, test_translit_lla_sylable);
+	tcase_add_test(test_case, test_translit_candrabindu);
 }

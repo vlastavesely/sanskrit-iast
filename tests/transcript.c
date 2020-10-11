@@ -22,6 +22,8 @@ START_TEST(test_transcript_devanagari_to_czech)
 	test_transcript("भगवद्गीता", "bhagavadgíta");
 
 	test_transcript("अग्निमीळे", "agnimílé");
+
+	test_transcript("तान्यजत्राँ", "tánjadžatrám");
 }
 END_TEST
 

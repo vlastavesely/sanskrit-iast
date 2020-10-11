@@ -64,6 +64,7 @@ static struct translit_letter table[] = {
 	{0x0902, CODA, "m"},          /* anusvara */
 	{0x0903, CODA, ""},           /* visarga  */
 	{0x093d, CODA, "'"},          /* avagrada */
+	{0x0901, CODA, "m"},          /* candrabindu */
 
 	/* Numbers */
 	{0x0966, NUMBER, "0"},

@@ -123,6 +123,13 @@ char *transliterate_latin_to_devanagari(const char *latin)
 			}
 		}
 
+		if (strncmp(src, "m\u0310", 3) == 0) {
+			utf8_pack_char(devanagari + done, 0x0901);
+			done += 3;
+			src += 3;
+			continue;
+		}
+
 		letter = letter_by_data(table, src);
 		if (letter) {
 			utf8_pack_char(devanagari + done, letter->code);
