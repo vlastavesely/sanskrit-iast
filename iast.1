@@ -1,4 +1,4 @@
-.TH "iast" "1" "25 September 2020" "sanskrit-iast" "Sanskrit Transliteration"
+.TH "iast" "1" "16 October 2020" "sanskrit-iast" "Sanskrit Transliteration"
 
 .SH NAME
 .B iast
@@ -49,7 +49,7 @@ Transcript a Devanagari text into Czech.
 
 .B \-e
 .RS 4
-Convert a symbolic ASCII(7) text to IAST representation.
+Convert Velthuis scheme text to IAST representation
 .RE
 
 .B \-h
@@ -64,20 +64,17 @@ Show version number and exit.
 
 
 .SH ENCODING
-When the flag \fB-e\fR is set on, the program converts purely ASCII-encoded strings
-into the special characters of the IAST alphabet. For example, it converts
-‘sam.skr.tam’ to ‘saṃskṛtam’ or ‘s,a-stram’ to ‘śāstram’.
+When the flag \fB-e\fR is set on, the program converts strings encoded using
+the Velthuis scheme (purely ASCII-encoded strings) into the special characters
+of the IAST alphabet. For example, it can convert ‘sa.msk.rtam’ to ‘saṃskṛtam’
+or ‘"saastram’ to ‘śāstram’.
 
-The encoding scheme is based on the following principle: characters ‘-’, ‘.’,
-‘,’ and ‘~’ are considered to be modifiers that modify a letter that stands
-before the modifier. For example, if the string to be encoded contains ‘a-’,
-it will be encoded as ‘ā’ and the sequence ‘n~’ as ‘ñ’ and so on. The only
-exception from the rule is the letter ‘n’ because it can be encoded both with
-an over-dot (ṅ) and under-dot (ṇ). For the over-dot variant, the conversion
-sequence is ‘n^.’.
-
-Alternatively, the Czech characters ‘á’, ‘í’, ‘ú’, ‘š’ and ‘ň’ can be used as
-shortcuts to encode the letters ‘ā’, ‘ī’, ‘ū’, ‘ś’ and ‘ñ’ respectively.
+The encoding scheme is based on the following principle: the characters ‘.’,
+‘"’ and ‘~’ are considered to be modifiers that modify the letter that stands
+after the modifier. For example, if the string to be encoded contains ‘.t’,
+it will be encoded as ‘ṭ’, the sequence ‘~n’ as ‘ñ’ and so on. Long vowels are
+marked by doubled letter corresponding to the vowel; thus ‘aa’ is encoded to
+‘ā’, ‘.rr’ to ‘ṝ’ and so on.
 
 
 .SH AUTHOR
@@ -104,3 +101,13 @@ Free Software Foundation.
 This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+
+.SH SEE ALSO
+More information on the encoding schemes can be found on Wikipedia:
+
+.RS 4
+IAST scheme: <https://en.wikipedia.org/wiki/IAST>
+.br
+Velthuis scheme: <https://en.wikipedia.org/wiki/Velthuis>
+.RE
