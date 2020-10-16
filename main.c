@@ -1,7 +1,7 @@
 #include "compat.h"
 #include "transliteration.h"
 #include "transcription.h"
-#include "encoder.h"
+#include "velthuis.h"
 
 #define PROGNAME "iast"
 #define VERSION "1.0"
@@ -21,7 +21,7 @@ static const char *usage_str =
 	"  -v     shows version number and exits\n"
 	"  -f     specifies file for conversion (‘-’ means standard input)\n"
 	"  -r     reverse transliteration (from Latin to Devanagari)\n"
-	"  -e     convert symbolic ASCII text to IAST representation\n"
+	"  -e     convert Velthuis scheme text to IAST representation\n"
 	"  -c     transcript Devanagari to Czech language\n"
 	"\n"
 	"  By default, ‘" PROGNAME "’ takes all input arguments written in Devanagari\n"
@@ -55,7 +55,7 @@ static void error(const char *msg, ...)
 static char *process_input(const char *input, unsigned int flags)
 {
 	if (flags & FLAG_ENCODE) {
-		return encode_iast_punctation(input);
+		return encode_velthuis_to_iast_punctation(input);
 	} else if (flags & FLAG_REVERSE) {
 		return transliterate_latin_to_devanagari(input);
 	} else if (flags & FLAG_CZECH) {

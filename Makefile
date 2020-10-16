@@ -5,8 +5,8 @@ PREFIX       = /usr/local
 BINDIR       = $(PREFIX)/bin
 MANDIR       = $(PREFIX)/share/man
 
-OBJECTS      = iast.o iast-czech.o transliteration.o transcription.o utf8.o encoder.o
-TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o tests/encoder.o
+OBJECTS      = iast.o iast-czech.o transliteration.o transcription.o utf8.o velthuis.o
+TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o tests/velthuis.o
 CFLAGS       = -Wall
 LIBS         =
 
