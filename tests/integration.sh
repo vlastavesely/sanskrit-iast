@@ -20,4 +20,4 @@ expected=$(sha1sum tests/texts/mandukya-upanishad.txt | head -c40)
 computed=$(sha1sum /tmp/iast-mandukya-upanishad.txt.out | head -c40)
 test "$expected" = "$computed"
 
-echo "\033[32mpassed\033[0m"
+printf "\033[32mpassed\033[0m\n"
