@@ -16,6 +16,8 @@ START_TEST(test_encode_punctation)
 	test_encoding("yoga.h", "yogaḥ");
 
 	test_encoding("tantra\"saastram", "tantraśāstram");
+
+	test_encoding("Aa AA - II Ii - .RR .Rr", "Ā Ā - Ī Ī - Ṝ Ṝ");
 }
 END_TEST
 

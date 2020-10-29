@@ -16,6 +16,10 @@ struct encoder_tuple {
 };
 
 static const struct encoder_tuple table[] = {
+	{"Aa",  "\u0100"},  {"Ii",  "\u012a"},
+	{"Uu",  "\u016a"},  {".Rr", "\u1e5c"},
+	{".Ll", "\u1e38"},
+
 	{"aa",  "\u0101"},  {"AA",  "\u0100"},
 	{"ii",  "\u012b"},  {"II",  "\u012a"},
 	{"uu",  "\u016b"},  {"UU",  "\u016a"},
