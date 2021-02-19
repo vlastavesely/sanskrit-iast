@@ -54,15 +54,16 @@ static void error(const char *msg, ...)
 
 static char *process_input(const char *input, unsigned int flags)
 {
-	if (flags & FLAG_ENCODE) {
+	if (flags & FLAG_ENCODE)
 		return encode_velthuis_to_iast_punctation(input);
-	} else if (flags & FLAG_REVERSE) {
+
+	if (flags & FLAG_REVERSE)
 		return transliterate_latin_to_devanagari(input);
-	} else if (flags & FLAG_CZECH) {
+
+	if (flags & FLAG_CZECH)
 		return transcript_devanagari_to_czech(input);
-	} else {
-		return transliterate_devanagari_to_latin(input);
-	}
+
+	return transliterate_devanagari_to_latin(input);
 }
 
 #define CHUNKSIZE 1024
@@ -165,10 +166,12 @@ int main(int argc, const char **argv)
 	}
 
 	for (i = 0; i < nfiles; i++) {
-		if (strcmp(files[i], "-") == 0)
+		if (strcmp(files[i], "-") == 0) {
 			retval = read_fd(&input, STDIN_FILENO);
-		else
+		} else {
 			retval = read_file(&input, files[i]);
+		}
+
 		if (retval != 0) {
 			error("failed to read file '%s'.", files[i]);
 			return retval;
