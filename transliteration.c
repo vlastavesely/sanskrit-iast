@@ -113,6 +113,7 @@ char *transliterate_latin_to_devanagari(const char *latin)
 			alloc += CHUNKSIZE;
 		}
 
+		/* consonant (.l) */
 		if (strncmp(src, "\u1e37", 3) == 0) {
 			letter = letter_by_data(table, src + 3);
 			if (letter && letter->type == VOWEL) {
@@ -123,6 +124,7 @@ char *transliterate_latin_to_devanagari(const char *latin)
 			}
 		}
 
+		/* candrabindu */
 		if (strncmp(src, "m\u0310", 3) == 0) {
 			utf8_pack_char(devanagari + done, 0x0901);
 			done += 3;

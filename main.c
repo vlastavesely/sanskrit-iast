@@ -4,7 +4,7 @@
 #include "velthuis.h"
 
 #define PROGNAME "iast"
-#define VERSION "1.0"
+#define VERSION "2.0"
 
 #define FLAG_REVERSE	1 << 0
 #define FLAG_ENCODE	1 << 1

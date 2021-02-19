@@ -42,7 +42,7 @@ static struct translit_letter table[] = {
 	{0x0939, CONSONANT, "h"},        /* 14 */
 	{0x091a, CONSONANT, "c"},        /* 15 */
 	{0x091c, CONSONANT, "j"},        /* 16 */
-	{0x091e, CONSONANT, "\u00f1"},   /* 17 (n~) */
+	{0x091e, CONSONANT, "\u00f1"},   /* 17 (~n) */
 	{0x092f, CONSONANT, "y"},        /* 18 */
 	{0x0936, CONSONANT, "\u015b"},   /* 19 ("s) */
 	{0x091f, CONSONANT, "\u1e6d"},   /* 20 (.t) */
