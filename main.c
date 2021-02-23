@@ -2,9 +2,9 @@
 #include "transliteration.h"
 #include "transcription.h"
 #include "velthuis.h"
+#include "config.h"
 
 #define PROGNAME "iast"
-#define VERSION "2.0"
 
 #define FLAG_REVERSE	1 << 0
 #define FLAG_ENCODE	1 << 1
@@ -38,7 +38,7 @@ static void print_usage()
 
 static void print_version()
 {
-	fprintf(stdout, PROGNAME " v" VERSION "\n");
+	fprintf(stdout, PROGNAME " v" PACKAGE_VERSION "\n");
 }
 
 static void error(const char *msg, ...)

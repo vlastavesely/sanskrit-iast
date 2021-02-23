@@ -1,0 +1,72 @@
+PROGNAME = @PROGNAME@
+
+CC              = @CC@
+INSTALL         = @INSTALL@
+INSTALL_DATA    = @INSTALL_DATA@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+MKDIR_P         = @MKDIR_P@
+
+prefix      = @prefix@
+exec_prefix = @exec_prefix@
+bindir      = @bindir@
+datarootdir = @datarootdir@
+mandir      = @mandir@
+
+CFLAGS = -Wall @CFLAGS@
+LFLAGS =
+
+TEST_CFLAGS = @CFLAGS@ @CHECK_CFLAGS@
+TEST_LFLAGS = @CHECK_LIBS@
+
+OBJECTS = iast.o iast-czech.o transliteration.o transcription.o utf8.o velthuis.o
+TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o tests/velthuis.o
+
+AUX_FILES = Makefile configure aclocal.m4 install-sh config.h* *.log	\
+	*.status *.cache
+
+all: $(PROGNAME) tests/test $(PROGNAME).1.gz
+
+include $(wildcard *.d tests/*.d)
+
+$(PROGNAME): main.o $(OBJECTS)
+	$(QUIET_LD) $(CC) $^ -o $@ $(LFLAGS)
+
+test: all
+	tests/test
+
+%.o: %.c
+	$(QUIET_CC) $(CC) -MMD -MP -c $< -o $@ $(CFLAGS)
+
+tests/%.o: tests/%.c
+	$(QUIET_CC) $(CC) -MMD -MP -c $< -o $@ $(TEST_CFLAGS)
+
+tests/test: $(OBJECTS) $(TEST_OBJECTS)
+	$(QUIET_LD) $(CC) $^ -o $@ $(TEST_CFLAGS) $(TEST_LFLAGS)
+
+%.1.gz: %.1
+	$(QUIET_GEN) cat $< | gzip -f >$@
+
+install:
+	$(MKDIR_P) $(bindir) $(mandir)/man1
+	$(INSTALL_PROGRAM) $(PROGNAME) $(bindir)
+	$(INSTALL_DATA) $(PROGNAME).1.gz $(mandir)/man1
+
+uninstall:
+	$(RM) $(bindir)/$(PROGNAME)
+	$(RM) $(mandir)/man1/$(PROGNAME).1.gz
+
+clean:
+	$(RM) $(PROGNAME) tests/test $(PROGNAME).1.gz
+	$(RM) *.o */*.o */*.d *.d
+
+clean-aux:
+	$(RM) -r $(AUX_FILES)
+
+distclean: clean clean-aux
+
+
+ifndef V
+QUIET_CC    = @echo "  CC     $@";
+QUIET_LD    = @echo "  CCLD   $@";
+QUIET_GEN   = @echo "  GEN    $@";
+endif
