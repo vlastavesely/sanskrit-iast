@@ -5,9 +5,11 @@ stages:
 
 before_script:
   - apt update
-  - apt install -y make gcc pkg-config check
+  - apt install -y autoconf make gcc pkg-config check
 
 test:
   stage: test
   script:
+    - sh autogen.sh
+    - sh configure
     - make test
