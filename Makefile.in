@@ -20,8 +20,11 @@ LFLAGS =
 TEST_CFLAGS = @CFLAGS@ @CHECK_CFLAGS@
 TEST_LFLAGS = @CHECK_LIBS@ @COVERAGE_LFLAGS@
 
-OBJECTS = iast.o iast-czech.o transliteration.o transcription.o utf8.o velthuis.o
-TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o tests/velthuis.o
+OBJECTS = iast.o iast-czech.o transliteration.o transcription.o utf8.o	\
+	velthuis.o
+
+TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o 	\
+	tests/velthuis.o tests/utf8.o
 
 AUX_FILES = Makefile configure aclocal.m4 install-sh config.h* *.log	\
 	*.status *.cache
