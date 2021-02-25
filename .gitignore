@@ -2,7 +2,10 @@
 *.d
 /iast
 /tests/test
+/tests/coverage
 *.1.gz
+*.gcno
+*.gcda
 
 /Makefile
 /configure

@@ -12,11 +12,13 @@ bindir      = @bindir@
 datarootdir = @datarootdir@
 mandir      = @mandir@
 
-CFLAGS = -Wall @CFLAGS@
+USE_GCOV = @USE_GCOV@
+
+CFLAGS = -Wall @CFLAGS@ @COVERAGE_CFLAGS@
 LFLAGS =
 
 TEST_CFLAGS = @CFLAGS@ @CHECK_CFLAGS@
-TEST_LFLAGS = @CHECK_LIBS@
+TEST_LFLAGS = @CHECK_LIBS@ @COVERAGE_LFLAGS@
 
 OBJECTS = iast.o iast-czech.o transliteration.o transcription.o utf8.o velthuis.o
 TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o tests/velthuis.o
@@ -31,7 +33,7 @@ include $(wildcard *.d tests/*.d)
 $(PROGNAME): main.o $(OBJECTS)
 	$(QUIET_LD) $(CC) $^ -o $@ $(LFLAGS)
 
-test: all
+test: tests/test
 	tests/test
 
 %.o: %.c
@@ -41,7 +43,7 @@ tests/%.o: tests/%.c
 	$(QUIET_CC) $(CC) -MMD -MP -c $< -o $@ $(TEST_CFLAGS)
 
 tests/test: $(OBJECTS) $(TEST_OBJECTS)
-	$(QUIET_LD) $(CC) $^ -o $@ $(TEST_CFLAGS) $(TEST_LFLAGS)
+	$(QUIET_LD) $(CC) $^ -o $@ $(TEST_LFLAGS)
 
 %.1.gz: %.1
 	$(QUIET_GEN) cat $< | gzip -f >$@
@@ -57,12 +59,21 @@ uninstall:
 
 clean:
 	$(RM) $(PROGNAME) tests/test $(PROGNAME).1.gz
-	$(RM) *.o */*.o */*.d *.d
+	$(RM) -r *.o */*.o */*.d *.d *.gcda *.gcno tests/coverage
 
 clean-aux:
 	$(RM) -r $(AUX_FILES)
 
 distclean: clean clean-aux
+
+ifeq ($(USE_GCOV),yes)
+coverage:
+	$(MAKE) test
+	$(MKDIR_P) tests/coverage
+	lcov --no-external -c -d $(shell pwd) -o tests/coverage/coverage.info
+	genhtml -o tests/coverage -t "IAST Test Coverage" \
+		tests/coverage/coverage.info
+endif
 
 
 ifndef V

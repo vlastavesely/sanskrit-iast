@@ -29,5 +29,29 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memmove])
 
+# Enable for gcov if option --enable-gcov is present.
+USE_GCOV=no
+AC_MSG_CHECKING([whether gcov should be enabled])
+AC_ARG_ENABLE(gcov,
+	AS_HELP_STRING([--enable-gcov], [enable gcov code coverage analysis]), [
+	if test "x$enableval" != "xno" ; then
+		if test "$GCC" != "yes"; then
+			AC_MSG_ERROR([gcc is required for --enable-gcov])
+		fi
+		AC_MSG_RESULT(yes)
+		COVERAGE_CFLAGS="-O0 -g -fno-inline -fprofile-arcs -ftest-coverage"
+		COVERAGE_LFLAGS="-fprofile-arcs -lgcov"
+		USE_GCOV=yes
+	else
+		AC_MSG_RESULT(no)
+		COVERAGE_CFLAGS=""
+		COVERAGE_LFLAGS=""
+		USE_GCOV=no
+	fi
+], [AC_MSG_RESULT(no)])
+AC_SUBST(COVERAGE_CFLAGS)
+AC_SUBST(COVERAGE_LFLAGS)
+AC_SUBST(USE_GCOV)
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
