@@ -2,14 +2,21 @@ image: debian
 
 stages:
   - test
+  - coverage
 
 before_script:
   - apt update
-  - apt install -y autoconf make gcc pkg-config check
+  - apt install -y autoconf make gcc lcov check pkg-config
 
 test:
   stage: test
   script:
-    - sh autogen.sh
-    - sh configure
+    - sh autogen.sh && sh configure
     - make test
+
+coverage:
+  stage: coverage
+  script:
+    - sh autogen.sh && sh configure --enable-gcov
+    - make coverage
+  coverage: /lines.+?:\s*(\d+\.\d+)%/
