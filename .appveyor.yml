@@ -1,0 +1,16 @@
+version: '{branch}-{build}'
+
+platform: x64
+
+environment:
+  CYG_ROOT: C:\cygwin64
+  CYG_SHELL: C:\cygwin64\bin\sh
+
+install:
+  - cmd: '%CYG_ROOT%\setup-x86_64.exe --quiet-mode --no-shortcuts --upgrade-also --packages autoconf,make,git,gcc,check'
+
+build_script:
+  - cmd: '%CYG_SHELL% -lc "cd $APPVEYOR_BUILD_FOLDER && sh autogen.sh && sh configure && make all"'
+
+test_script:
+  - cmd: '%CYG_SHELL% -lc "cd $APPVEYOR_BUILD_FOLDER && make test"'
