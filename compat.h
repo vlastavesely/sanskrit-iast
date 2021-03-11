@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdarg.h>
+#include <getopt.h>
 #include <errno.h>
 
 #endif /* __COMPAT_H */

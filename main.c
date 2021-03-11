@@ -5,29 +5,47 @@
 #include "config.h"
 
 #define FLAG_REVERSE	1 << 0
-#define FLAG_ENCODE	1 << 1
+#define FLAG_VELTHUIS	1 << 1
 #define FLAG_CZECH	1 << 2
 
 static const char *usage_str =
 	PROGNAME ", a helper for Sanskrit transliteration.\n"
 	"\n"
-	"usage:\n"
+	"Usage:\n"
 	"  " PROGNAME " [flags and text arguments in any order]\n"
 	"\n"
-	"options:\n"
-	"  -h     shows this help and exits\n"
-	"  -v     shows version number and exits\n"
-	"  -f     specifies file for conversion (‘-’ means standard input)\n"
-	"  -r     reverse transliteration (from Latin to Devanagari)\n"
-	"  -e     convert Velthuis scheme text to IAST representation\n"
-	"  -c     transcript Devanagari to Czech language\n"
+	"Options:\n"
+	"  -f, --file        the input file for transliteration\n"
+	"  -r, --reverse     reverse transliteration (from Latin to Devanagari)\n"
+	"  -e, --encode      convert an ASCII text to IAST using the Velthuis scheme\n"
+	"  -c, --czech       transcript Devanagari to Czech language (experimental)\n"
+	"  -h, --help        show this help and exit\n"
+	"  -v, --version     show version number and exit\n"
 	"\n"
-	"  By default, ‘" PROGNAME "’ takes all input arguments written in Devanagari\n"
-	"  and transliterates them to the IAST version.\n"
+	"Information:\n"
+	"  By default, the program takes all non-option text arguments written in\n"
+	"  Devanagari and transliterates them into the IAST version. When the FILE\n"
+	"  is set to '-', the standard input shall be read for input. The input data\n"
+	"  are expected to be a valid Unicode string.\n"
 	"\n"
-	"  When the flag ‘-e’ is set up, the program converts purely ASCII-encoded\n"
-	"  strings into the special characters of the IAST alphabet. For example, it\n"
-	"  converts ‘sam.skr.tam’ to ‘saṃskṛtam’ or ‘s,a-stram’ to ‘śāstram’.\n";
+	"  Since the program outputs Unicode characters, you need to ensure that your\n"
+	"  terminal emulator is able to display the characters correctly if you are\n"
+	"  printing those into the console instead of a file.\n"
+	"\n"
+	"  For more information see the iast(1) manual page.\n";
+
+static const char *short_opts = "f:rechv";
+
+static const struct option long_opts[] = {
+	{"file",       required_argument,  0, 'f'},
+	{"reverse",    no_argument,        0, 'r'},
+	{"encode",     no_argument,        0, 'e'},
+	{"velthuis",   no_argument,        0, 'e'},
+	{"czech",      no_argument,        0, 'c'},
+	{"help",       no_argument,        0, 'h'},
+	{"version",    no_argument,        0, 'v'},
+	{0, 0, 0, 0}
+};
 
 static void print_usage()
 {
@@ -52,11 +70,11 @@ static void error(const char *msg, ...)
 
 static char *process_input(const char *input, unsigned int flags)
 {
-	if (flags & FLAG_ENCODE)
-		return encode_velthuis_to_iast_punctation(input);
-
 	if (flags & FLAG_REVERSE)
 		return transliterate_latin_to_devanagari(input);
+
+	if (flags & FLAG_VELTHUIS)
+		return encode_velthuis_to_iast_punctation(input);
 
 	if (flags & FLAG_CZECH)
 		return transcript_devanagari_to_czech(input);
@@ -113,10 +131,9 @@ static int read_file(char **out, const char *path)
 
 int main(int argc, const char **argv)
 {
-	int i, retval;
-	const char *arg;
-	const char *files[argc], *texts[argc];
-	unsigned int nfiles = 0, ntexts = 0;
+	int i, retval, c = 0, opt_index = 0;
+	const char *files[argc];
+	unsigned int nfiles = 0;
 	unsigned int flags = 0;
 	char *input, *output;
 
@@ -125,40 +142,43 @@ int main(int argc, const char **argv)
 		return -1;
 	}
 
-	for (i = 1; i < argc; i++) {
-		arg = argv[i];
+	opterr = 0; /* disable the auto error message */
+	while (c != -1) {
+		c = getopt_long(argc, (char * const *) argv, short_opts,
+				long_opts, &opt_index);
 
-		if (*arg == '-') {
-			switch (arg[1]) {
-			case 'r':
-				flags |= FLAG_REVERSE;
-				continue;
-			case 'e':
-				flags |= FLAG_ENCODE;
-				continue;
-			case 'c':
-				flags |= FLAG_CZECH;
-				continue;
-			case 'f':
-				files[nfiles++] = argv[++i];
-				continue;
-			case 'h':
-				print_usage();
-				return 0;
-			case 'v':
-				print_version();
-				return 0;
-			}
-
-			error("unknown option '%s'.", arg);
-			return -1;
-		} else {
-			texts[ntexts++] = arg;
+		switch (c) {
+		case 'f':
+			files[nfiles++] = optarg;
+			break;
+		case 'r':
+			flags |= FLAG_REVERSE;
+			break;
+		case 'e':
+			flags |= FLAG_VELTHUIS;
+			break;
+		case 'c':
+			flags |= FLAG_CZECH;
+			break;
+		case 'h':
+			print_usage();
+			return 0;
+		case 'v':
+			print_version();
+			return 0;
+		case '?':
+			error("unrecognised option '-%s'.", optopt ?
+			      (char *) &(optopt) : argv[optind - 1] + 1);
+			break;
+		default:
+			break;
 		}
 	}
 
-	for (i = 0; i < ntexts; i++) {
-		output = process_input(texts[i], flags);
+	while (optind < argc) {
+		const char *arg = argv[optind++];
+
+		output = process_input(arg, flags);
 		fprintf(stdout, "%s\n", output);
 		free(output);
 	}

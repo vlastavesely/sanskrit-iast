@@ -5,7 +5,7 @@ usage=$(./iast -h)
 test -n $(echo "$usage" | grep "iast [flags and text arguments in any order]")
 
 version=$(./iast -v)
-test "$version" = "iast v2.0"
+test "$version" = "iast v2.0.0"
 
 ./iast -f tests/texts/bhagavadgita-1.txt |
 	./iast -r -f - >/tmp/iast-bhagavadgita-1.txt.out
