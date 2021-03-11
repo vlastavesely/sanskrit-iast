@@ -4,8 +4,6 @@
 #include "velthuis.h"
 #include "config.h"
 
-#define PROGNAME "iast"
-
 #define FLAG_REVERSE	1 << 0
 #define FLAG_ENCODE	1 << 1
 #define FLAG_CZECH	1 << 2

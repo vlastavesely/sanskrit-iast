@@ -7,7 +7,8 @@ AC_CONFIG_SRCDIR([iast.c])
 AC_CONFIG_HEADERS([config.h])
 
 PROGNAME=iast
-AC_SUBST(PROGNAME)
+AC_SUBST([PROGNAME])
+AC_DEFINE_UNQUOTED([PROGNAME], ["$PROGNAME"], [Name of the target binary])
 
 # Checks for programs.
 AC_PROG_CC
