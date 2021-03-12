@@ -6,7 +6,8 @@
 #include "utf8.h"
 
 #define SCHWA_CHARACTER 'a'
-#define VIRAMA 0x094d
+#define VIRAMA    0x094d
+#define NUKTA     0x093c
 #define CHUNKSIZE 1024
 
 static struct translit_letter *letter_by_code(struct translit_letter *table,
@@ -21,7 +22,7 @@ static struct translit_letter *letter_by_code(struct translit_letter *table,
 	return NULL;
 }
 
-char *transliterate_devanagari_to_latin(const char *devanagari)
+int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 {
 	struct translit_letter *table, *letter;
 	unsigned int c, alloc = 0, done = 0, len;
@@ -40,6 +41,11 @@ char *transliterate_devanagari_to_latin(const char *devanagari)
 		len = utf8_char_length(c);
 		src += len;
 
+		if (c == NUKTA) {
+			*ret = NULL;
+			return EHINDI;
+		}
+
 		letter = letter_by_code(table, c);
 		if (letter) {
 			switch (letter->type) {
@@ -49,11 +55,10 @@ char *transliterate_devanagari_to_latin(const char *devanagari)
 				*(latin + done++) = SCHWA_CHARACTER;
 				break;
 			case VOWEL_SIGN:
-				if (done)
+				if (done) {
+					/* delete the inherent schwa */
 					done--;
-				strcpy(latin + done, letter->data);
-				done += strlen(letter->data);
-				break;
+				}
 			default:
 				strcpy(latin + done, letter->data);
 				done += strlen(letter->data);
@@ -68,7 +73,9 @@ char *transliterate_devanagari_to_latin(const char *devanagari)
 			break;
 	}
 
-	return latin;
+	*ret = latin;
+
+	return 0;
 }
 
 static struct translit_letter *letter_by_data(struct translit_letter *table,
@@ -98,7 +105,7 @@ static struct translit_letter *vowel_sign_by_data(struct translit_letter *table,
 	return NULL;
 }
 
-char *transliterate_latin_to_devanagari(const char *latin)
+int transliterate_latin_to_devanagari(const char *latin, char **ret)
 {
 	struct translit_letter *table, *letter, *next;
 	unsigned int alloc = 0, done = 0, len;
@@ -165,5 +172,7 @@ encode_vowel_modifier:
 	if (devanagari)
 		devanagari[done] = '\0';
 
-	return devanagari;
+	*ret = devanagari;
+
+	return 0;
 }

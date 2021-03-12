@@ -55,7 +55,7 @@ static const struct encoder_tuple *find_tuple(const char *text)
 	return NULL;
 }
 
-char *encode_velthuis_to_iast_punctation(const char *text)
+int encode_velthuis_to_iast_punctation(const char *text, char **out)
 {
 	const char *str = text, *end = str + strlen(str);
 	const struct encoder_tuple *tuple;
@@ -79,5 +79,7 @@ char *encode_velthuis_to_iast_punctation(const char *text)
 		}
 	}
 
-	return buf;
+	*out = buf;
+
+	return 0;
 }

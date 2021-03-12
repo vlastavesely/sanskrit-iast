@@ -10,4 +10,8 @@
 #include <getopt.h>
 #include <errno.h>
 
+enum err {
+	EHINDI = 1
+};
+
 #endif /* __COMPAT_H */

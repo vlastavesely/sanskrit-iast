@@ -6,8 +6,10 @@
 #include "iast-czech.h"
 #include "utf8.h"
 
-#define CHUNKSIZE 1024
 #define SCHWA_CHARACTER 'a'
+#define VIRAMA    0x094d
+#define NUKTA     0x093c
+#define CHUNKSIZE 1024
 
 static inline int is_consonant(unsigned int c)
 {
@@ -58,7 +60,7 @@ static void end_of_word_filter(char *latin, unsigned int *pos,
 
 		/* remove singular nominative suffix */
 		len = utf8_char_length(c);
-		if (prev == 0x094d && *(latin + *pos - 1 - len) == 'm') {
+		if (prev == VIRAMA && *(latin + *pos - 1 - len) == 'm') {
 			memmove(latin + *pos - 1 - len, latin + *pos - len, c);
 			*pos = *pos - 1;
 		}
@@ -77,7 +79,7 @@ static struct translit_letter *letter_by_code(struct translit_letter *table,
 	return NULL;
 }
 
-char *transcript_devanagari_to_czech(const char *devanagari)
+int transcript_devanagari_to_czech(const char *devanagari, char **ret)
 {
 	struct translit_letter *table, *letter;
 	unsigned int c, prev = 0, alloc = 0, done = 0, len;
@@ -98,6 +100,11 @@ char *transcript_devanagari_to_czech(const char *devanagari)
 
 		nasal_consonants_filter(latin, &done, prev, c);
 
+		if (c == NUKTA) {
+			*ret = NULL;
+			return EHINDI;
+		}
+
 		letter = letter_by_code(table, c);
 		if (letter) {
 			switch (letter->type) {
@@ -107,11 +114,10 @@ char *transcript_devanagari_to_czech(const char *devanagari)
 				*(latin + done++) = SCHWA_CHARACTER;
 				break;
 			case VOWEL_SIGN:
-				if (done)
+				if (done) {
+					/* delete the inherent schwa */
 					done--;
-				strcpy(latin + done, letter->data);
-				done += strlen(letter->data);
-				break;
+				}
 			default:
 				strcpy(latin + done, letter->data);
 				done += strlen(letter->data);
@@ -132,5 +138,7 @@ char *transcript_devanagari_to_czech(const char *devanagari)
 
 	*(latin + done - 1) = '\0';
 
-	return latin;
+	*ret = latin;
+
+	return 0;
 }

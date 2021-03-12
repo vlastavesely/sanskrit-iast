@@ -68,18 +68,42 @@ static void error(const char *msg, ...)
 	va_end(params);
 }
 
-static char *process_input(const char *input, unsigned int flags)
+static int process_input(const char *input, char **out, unsigned int flags)
 {
 	if (flags & FLAG_REVERSE)
-		return transliterate_latin_to_devanagari(input);
+		return transliterate_latin_to_devanagari(input, out);
 
 	if (flags & FLAG_VELTHUIS)
-		return encode_velthuis_to_iast_punctation(input);
+		return encode_velthuis_to_iast_punctation(input, out);
 
 	if (flags & FLAG_CZECH)
-		return transcript_devanagari_to_czech(input);
+		return transcript_devanagari_to_czech(input, out);
 
-	return transliterate_devanagari_to_latin(input);
+	return transliterate_devanagari_to_latin(input, out);
+}
+
+static int process_string(const char *input, unsigned int flags)
+{
+	char *output;
+	int ret;
+
+	ret = process_input(input, &output, flags);
+
+	switch (ret) {
+	case 0:
+		fprintf(stdout, "%s", output);
+		break;
+	case EHINDI:
+		error("the input text is Hindi");
+		break;
+	default:
+		error("unexpected error");
+		break;
+	}
+
+	free(output);
+
+	return ret;
 }
 
 #define CHUNKSIZE 1024
@@ -135,7 +159,7 @@ int main(int argc, const char **argv)
 	const char *files[argc];
 	unsigned int nfiles = 0;
 	unsigned int flags = 0;
-	char *input, *output;
+	char *input;
 
 	if (argc == 1) {
 		print_usage();
@@ -178,10 +202,11 @@ int main(int argc, const char **argv)
 	while (optind < argc) {
 		const char *arg = argv[optind++];
 
-		output = process_input(arg, flags);
-		fprintf(stdout, "%s\n", output);
-		free(output);
-	}
+		retval = process_string(arg, flags);
+		if (retval != 0)
+			return retval;
+		putchar('\n');
+ 	}
 
 	for (i = 0; i < nfiles; i++) {
 		if (strcmp(files[i], "-") == 0) {
@@ -194,11 +219,10 @@ int main(int argc, const char **argv)
 			error("failed to read file '%s'.", files[i]);
 			return retval;
 		}
-
-		output = process_input(input, flags);
-		fprintf(stdout, "%s", output);
-		free(output);
+		retval = process_string(input, flags);
 		free(input);
+		if (retval != 0)
+			return retval;
 	}
 
 	return 0;

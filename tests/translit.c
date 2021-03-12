@@ -1,11 +1,16 @@
 #include "test.h"
 #include "translit.h"
+#include "../compat.h"
 #include "../transliteration.h"
 
 static void test_transliterate_devanagari_to_latin(const char *devanagari,
 						   const char *latin)
 {
-	char *str = transliterate_devanagari_to_latin(devanagari);
+	char *str;
+	int ret;
+
+	ret = transliterate_devanagari_to_latin(devanagari, &str);
+	ck_assert_int_eq(0, ret);
 	ck_assert_str_eq(latin, str);
 	free(str);
 }
@@ -13,7 +18,10 @@ static void test_transliterate_devanagari_to_latin(const char *devanagari,
 static void test_transliterate_latin_to_devanagari(const char *latin,
 						   const char *devanagari)
 {
-	char *str = transliterate_latin_to_devanagari(latin);
+	char *str;
+	int ret;
+
+	ret = transliterate_latin_to_devanagari(latin, &str);
 	ck_assert_str_eq(devanagari, str);
 	free(str);
 }
@@ -65,10 +73,19 @@ START_TEST(test_translit_candrabindu)
 }
 END_TEST
 
+START_TEST(test_translit_detect_hindi)
+{
+	char *hindi = NULL;
+	int ret = transliterate_devanagari_to_latin("लड़की", &hindi);
+	ck_assert_int_eq(EHINDI, ret);
+}
+END_TEST
+
 void register_translit_tests(TCase *test_case)
 {
 	tcase_add_test(test_case, test_translit_devanagari_to_latin);
 	tcase_add_test(test_case, test_translit_latin_to_devanagari);
 	tcase_add_test(test_case, test_translit_lla_sylable);
 	tcase_add_test(test_case, test_translit_candrabindu);
+	tcase_add_test(test_case, test_translit_detect_hindi);
 }

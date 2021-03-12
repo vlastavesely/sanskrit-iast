@@ -4,7 +4,8 @@
 
 static void test_encoding(const char *in, const char *expected)
 {
-	char *iast = encode_velthuis_to_iast_punctation(in);
+	char *iast;
+	encode_velthuis_to_iast_punctation(in, &iast);
 	ck_assert_str_eq(expected, iast);
 	free(iast);
 }

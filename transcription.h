@@ -3,6 +3,6 @@
 #ifndef __TRANSCRIPTION_H
 #define __TRANSCRIPTION_H
 
-char *transcript_devanagari_to_czech(const char *devanagari);
+int transcript_devanagari_to_czech(const char *devanagari, char **ret);
 
 #endif /* __TRANSCRIPTION_H */

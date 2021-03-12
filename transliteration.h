@@ -22,8 +22,8 @@ struct translit_context {
 	struct translit_letter *table;
 };
 
-char *transliterate_devanagari_to_latin(const char *text);
-char *transliterate_latin_to_devanagari(const char *text);
+int transliterate_devanagari_to_latin(const char *text, char **ret);
+int transliterate_latin_to_devanagari(const char *text, char **ret);
 
 static inline int is_devanagari(unsigned int code)
 {
