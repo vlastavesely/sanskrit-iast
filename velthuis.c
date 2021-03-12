@@ -1,10 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /* https://en.wikipedia.org/wiki/Velthuis */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include "compat.h"
 #include "velthuis.h"
 #include "utf8.h"
 
@@ -61,9 +58,9 @@ int encode_velthuis_to_iast_punctation(const char *text, char **out)
 	const struct encoder_tuple *tuple;
 	char *buf, *dest;
 
-	buf = calloc(1, strlen(text) << 1);
+	buf = calloc(1, strlen(text) * 2); /* should be enough */
 	if (buf == NULL)
-		return NULL;
+		return ENOMEM;
 
 	dest = buf;
 	while (str < end) {

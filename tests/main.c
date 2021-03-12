@@ -3,6 +3,7 @@
 #include "transcript.h"
 #include "velthuis.h"
 #include "utf8.h"
+#include "integration.h"
 
 static Suite *create_test_suite()
 {
@@ -16,6 +17,8 @@ static Suite *create_test_suite()
 	register_transcript_tests(test_case);
 	register_velthuis_encoder_tests(test_case);
 	register_utf8_tests(test_case);
+
+	register_integration_tests(test_case);
 
 	suite_add_tcase(suite, test_case);
 

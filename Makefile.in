@@ -24,7 +24,7 @@ OBJECTS = iast.o iast-czech.o transliteration.o transcription.o utf8.o	\
 	velthuis.o
 
 TEST_OBJECTS = tests/main.o tests/translit.o tests/transcript.o 	\
-	tests/velthuis.o tests/utf8.o
+	tests/velthuis.o tests/utf8.o tests/integration.o
 
 AUX_FILES = Makefile configure aclocal.m4 install-sh config.h* *.log	\
 	*.status *.cache
@@ -36,7 +36,7 @@ include $(wildcard *.d tests/*.d)
 $(PROGNAME): main.o $(OBJECTS)
 	$(QUIET_LD) $(CC) $^ -o $@ $(LFLAGS)
 
-test: tests/test
+test: all
 	tests/test
 
 %.o: %.c
