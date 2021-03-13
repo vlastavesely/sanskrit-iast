@@ -117,6 +117,19 @@ START_TEST(test_usage)
 	out[44] = '\0'; /* the first line is enough here */
 	ck_assert_str_eq("iast, a helper for Sanskrit transliteration.", out);
 	free(out);
+
+	out = exec_command("./iast -h");
+	out[44] = '\0';
+	ck_assert_str_eq("iast, a helper for Sanskrit transliteration.", out);
+	free(out);
+}
+END_TEST
+
+START_TEST(test_errors)
+{
+	test_output("./iast -x 2>&1", "[iast] error: unrecognised option '-x'.\n");
+	test_output("./iast -f xxx 2>&1", "[iast] error: failed to read file 'xxx'.\n");
+	test_output("./iast \u0921\u093c 2>&1", "[iast] error: the input text is Hindi.\n");
 }
 END_TEST
 
@@ -128,4 +141,5 @@ void register_integration_tests(TCase *test_case)
 	tcase_add_test(test_case, test_velthuis);
 	tcase_add_test(test_case, test_version);
 	tcase_add_test(test_case, test_usage);
+	tcase_add_test(test_case, test_errors);
 }

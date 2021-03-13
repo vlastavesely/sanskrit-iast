@@ -94,10 +94,10 @@ static int process_string(const char *input, unsigned int flags)
 		fprintf(stdout, "%s", output);
 		break;
 	case EHINDI:
-		error("the input text is Hindi");
+		error("the input text is Hindi.");
 		break;
 	default:
-		error("unexpected error");
+		error("unexpected error.");
 		break;
 	}
 
