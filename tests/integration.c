@@ -58,12 +58,14 @@ static void test_file_transliteration(const char *filename)
 	sprintf(cmd, "./iast -f %s | ./iast -r -f -", filename);
 	a = exec_command(cmd);
 	b = read_file(filename);
+
 	ck_assert_str_eq(a, b);
+
 	free(a);
 	free(b);
 }
 
-START_TEST(test_integration)
+START_TEST(test_transliterate_files)
 {
 	test_file_transliteration("tests/texts/bhagavadgita-1.txt");
 	test_file_transliteration("tests/texts/mandukya-upanishad.txt");
@@ -71,17 +73,46 @@ START_TEST(test_integration)
 }
 END_TEST
 
+static void test_output(const char *command, const char *expected)
+{
+	char *out;
+
+	out = exec_command(command);
+	ck_assert_str_eq(expected, out);
+	free(out);
+}
+
+START_TEST(test_transliterate_arguments)
+{
+	test_output("./iast \"भगवद्गीता\"", "bhagavadgītā\n");
+}
+END_TEST
+
+START_TEST(test_transcript)
+{
+	test_output("./iast -c \"भगवद्गीता\"", "bhagavadgíta\n");
+	test_output("./iast --czech \"तन्त्रशास्त्रम्\"", "tantrašástra\n");
+}
+END_TEST
+
+START_TEST(test_velthuis)
+{
+	test_output("./iast \"r.ta.m ca satyam\" -e", "rṭaṃ ca satyam\n");
+	test_output("./iast \"r.ta.m ca satyam\" --encode", "rṭaṃ ca satyam\n");
+	test_output("./iast \"r.ta.m ca satyam\" --velthuis", "rṭaṃ ca satyam\n");
+}
+END_TEST
+
 START_TEST(test_version)
 {
-	char *out = exec_command("./iast -v");
-	ck_assert_str_eq("iast v2.0.0\n", out);
-	free(out);
+	test_output("./iast -v", "iast v2.0.0\n");
 }
 END_TEST
 
 START_TEST(test_usage)
 {
 	char *out;
+
 	out = exec_command("./iast");
 	out[44] = '\0'; /* the first line is enough here */
 	ck_assert_str_eq("iast, a helper for Sanskrit transliteration.", out);
@@ -91,7 +122,10 @@ END_TEST
 
 void register_integration_tests(TCase *test_case)
 {
-	tcase_add_test(test_case, test_integration);
+	tcase_add_test(test_case, test_transliterate_files);
+	tcase_add_test(test_case, test_transliterate_arguments);
+	tcase_add_test(test_case, test_transcript);
+	tcase_add_test(test_case, test_velthuis);
 	tcase_add_test(test_case, test_version);
 	tcase_add_test(test_case, test_usage);
 }
