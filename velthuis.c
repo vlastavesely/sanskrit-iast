@@ -5,8 +5,6 @@
 #include "velthuis.h"
 #include "utf8.h"
 
-#define ARRAY_SIZE(a) sizeof(a) / sizeof(*a)
-
 struct encoder_tuple {
 	const char *from;
 	const char *to;

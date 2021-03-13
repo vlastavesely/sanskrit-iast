@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([sanskrit-iast], [2.0.0], [vlastavesely@protonmail.ch])
-AC_CONFIG_SRCDIR([iast.c])
+AC_CONFIG_SRCDIR([transliteration.c])
 AC_CONFIG_HEADERS([config.h])
 
 PROGNAME=iast
