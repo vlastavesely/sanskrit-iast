@@ -7,6 +7,7 @@
 #define FLAG_REVERSE	1 << 0
 #define FLAG_VELTHUIS	1 << 1
 #define FLAG_CZECH	1 << 2
+#define FLAG_ASCII	1 << 3
 
 static const char *usage_str =
 	PROGNAME ", a helper for Sanskrit transliteration.\n"
@@ -34,13 +35,14 @@ static const char *usage_str =
 	"\n"
 	"  For more information see the iast(1) manual page.\n";
 
-static const char *short_opts = "f:rechv";
+static const char *short_opts = "f:reachv";
 
 static const struct option long_opts[] = {
 	{"file",       required_argument,  0, 'f'},
 	{"reverse",    no_argument,        0, 'r'},
 	{"encode",     no_argument,        0, 'e'},
 	{"velthuis",   no_argument,        0, 'e'},
+	{"ascii",      no_argument,        0, 'a'},
 	{"czech",      no_argument,        0, 'c'},
 	{"help",       no_argument,        0, 'h'},
 	{"version",    no_argument,        0, 'v'},
@@ -70,16 +72,29 @@ static void error(const char *msg, ...)
 
 static int process_input(const char *input, char **out, unsigned int flags)
 {
+	char *tmp = NULL;
+	int ret;
+
 	if (flags & FLAG_REVERSE)
 		return transliterate_latin_to_devanagari(input, out);
 
 	if (flags & FLAG_VELTHUIS)
-		return encode_velthuis_to_iast_punctation(input, out);
+		return encode_velthuis_to_iast(input, out);
 
 	if (flags & FLAG_CZECH)
 		return transcript_devanagari_to_czech(input, out);
 
-	return transliterate_devanagari_to_latin(input, out);
+	if (flags & FLAG_ASCII) {
+		ret = transliterate_devanagari_to_latin(input, &tmp);
+		if (ret != 0)
+			return ret;
+
+		ret = encode_iast_to_velthuis(tmp, out);
+		free(tmp);
+		return ret;
+	} else {
+		return transliterate_devanagari_to_latin(input, out);
+	}
 }
 
 static int process_string(const char *input, unsigned int flags)
@@ -180,6 +195,9 @@ int main(int argc, const char **argv)
 			break;
 		case 'e':
 			flags |= FLAG_VELTHUIS;
+			break;
+		case 'a':
+			flags |= FLAG_ASCII;
 			break;
 		case 'c':
 			flags |= FLAG_CZECH;

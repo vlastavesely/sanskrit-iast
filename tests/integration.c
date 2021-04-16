@@ -103,6 +103,12 @@ START_TEST(test_velthuis)
 }
 END_TEST
 
+START_TEST(test_ascii)
+{
+	test_output("./iast \"अग्निमीळे पुरोहितं\" -a", "agnimii.le purohita.m\n");
+}
+END_TEST
+
 START_TEST(test_version)
 {
 	test_output("./iast -v", "iast v2.0.0\n");
@@ -139,6 +145,7 @@ void register_integration_tests(TCase *test_case)
 	tcase_add_test(test_case, test_transliterate_arguments);
 	tcase_add_test(test_case, test_transcript);
 	tcase_add_test(test_case, test_velthuis);
+	tcase_add_test(test_case, test_ascii);
 	tcase_add_test(test_case, test_version);
 	tcase_add_test(test_case, test_usage);
 	tcase_add_test(test_case, test_errors);
