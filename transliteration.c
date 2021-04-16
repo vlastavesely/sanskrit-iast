@@ -100,6 +100,9 @@ static struct translit_letter table[] = {
 	{0x0947, VOWEL_SIGN, "e"},
 	{0x094b, VOWEL_SIGN, "o"},
 	{0x094d, VOWEL_SIGN, ""},        /* virama */
+
+	{0x0965, CODA, "||"},            /* double danda */
+	{0x0964, CODA, "|"},             /* danda */
 };
 
 static struct translit_letter *letter_by_code(unsigned int c)
