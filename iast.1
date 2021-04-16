@@ -1,99 +1,183 @@
-.TH "iast" "1" "16 October 2020" "sanskrit-iast" "Sanskrit Transliteration"
+.TH "iast" "1" "16 April 2021" "sanskrit-iast" "Sanskrit Transliteration"
 
 .SH NAME
 .B iast
-- a helper for Sanskrit transliteration
+- a program for Sanskrit transliteration
 
 
 .SH SYNOPSIS
 .SY iast
-.OP -h
-.OP -v
 .RB [ -f
 .IR FILE ]...\&
-.RB [ -r " |"
-.BR -c " |"
-.BR -e ]
+.RI [ "TEXT ARGUMENTS" ]...
+.br
+.SY iast
+.B -r
+.RB [ -f
+.IR FILE ]...\&
+.RI [ "TEXT ARGUMENTS" ]...
+.br
+.SY iast
+.B -e
+.RB [ -f
+.IR FILE ]...\&
 .RI [ "TEXT ARGUMENTS" ]...
 .YS
 
 
-.SH DESCRIPTION
-\fBiast\fR is a tool for the lossless transliteration of Sanskrit terms written
-in Devanagari into Latin using the IAST scheme (International Alphabet of
-Sanskrit Transliteration).
-
-The program allows to perform transliteration either on all non-option
-arguments or on whole files specified by the \fB-f\fR option. By default, it
-performs transliteration from Devanagari to a corresponding romanised version,
-but using the \fB-r\fR switch, reverse transliteration can be performed, converting
-romanised texts back into Devanagari.
+.SH INTRODUCTION
+.B iast
+is a tool for the lossless transliteration of Sanskrit texts from Devanagari
+to the Latin alphabet using the
+.I IAST
+scheme (International Alphabet of Sanskrit Transliteration). It should be
+noted that as the
+.I IAST
+standard does not handle the Devanagari characters with the diacritic marks
+(e.g., the nukta), it cannot be used to transliterate modern Hindi texts.
+Furthermore, since there are some differences between spoken and written Hindi,
+support for transliteration of Hindi texts makes no sense and is therefore
+not a planned feature.
 
 
 .SH OPTIONS
-.B \-f
+.BR \-f
+.IR FILE ,
+.B \-\-file
 .I FILE
 .RS 4
-Input file for processing.
+The input file for the transliteration. A plain text file containing a
+.BR UTF-8 (7)
+string is expected. When the
+.I FILE
+is
+.BR - ,
+the contents of the standard input shall be read.
 .RE
 
-.B \-r
+.BR \-r ,
+.B \-\-reverse
 .RS 4
 Use reverse transliteration (from Latin to Devanagari).
 .RE
 
-.B \-c
+.BR \-c ,
+.B \-\-czech
 .RS 4
-Transcript a Devanagari text into Czech.
+Transcript a Devanagari text into Czech using only the characters of the Czech
+alphabet (an experimental feature).
 .RE
 
-.B \-e
+.BR \-e ,
+.BR \-\-encode ,
+.BR \-\-velthuis
 .RS 4
-Convert Velthuis scheme text to IAST representation
+Convert a plain
+.BR ASCII (7)
+string to the
+.I IAST
+representation using the
+.I Velthuis
+scheme.
 .RE
 
-.B \-h
+.BR \-a ,
+.B \-\-ascii
 .RS 4
-Show usage information and exit.
+Output
+.I Velthuis
+encoding rather than
+.I IAST
+characters.
 .RE
 
-.B \-v
+.BR \-h ,
+.B \-\-help
 .RS 4
-Show version number and exit.
+Show the usage information and exit.
+.RE
+
+.BR \-v ,
+.B \-\-version
+.RS 4
+Show the version number and exit.
 .RE
 
 
-.SH ENCODING
-When the flag \fB-e\fR is set on, the program converts strings encoded using
-the Velthuis scheme (purely ASCII-encoded strings) into the special characters
-of the IAST alphabet. For example, it can convert ‘sa.msk.rtam’ to ‘saṃskṛtam’
+.SH DESCRIPTION
+.SS Transliteration
+The program allows to perform transliteration either on all non-option
+arguments or on whole files specified by the
+.B -f
+option. By default, the program
+performs transliteration from Devanagari to a corresponding romanised version,
+but using the
+.B -r
+switch, reverse transliteration can be performed, converting romanised texts
+back into Devanagari.
+
+Alternatively, when the flag
+.B -c
+is used, the input can be transcripted for usage in the Czech language,
+limiting the used characters to the common characters of the Czech alphabet
+and applying some phonetic changes. Note: this transformation is not
+unambiguous and it is therefore not possible to recover the original Devanagari
+version again.
+
+
+.SS Velthuis Encoding
+When the flag
+.B -e
+is set on, the program converts strings encoded using the
+.I Velthuis
+scheme (purely
+.IR ASCII -encoded
+strings) into the special characters
+of the
+.I IAST
+alphabet. For example, it can convert ‘sa.msk.rtam’ to ‘saṃskṛtam’
 or ‘"saastram’ to ‘śāstram’.
 
 The encoding scheme is based on the following principle: the characters ‘.’,
 ‘"’ and ‘~’ are considered to be modifiers that modify the letter that stands
-after the modifier. For example, if the string to be encoded contains ‘.t’,
-it will be encoded as ‘ṭ’, the sequence ‘~n’ as ‘ñ’ and so on. Long vowels are
-marked by doubled letter corresponding to the vowel; thus ‘aa’ is encoded to
-‘ā’, ‘.rr’ to ‘ṝ’ and so on.
+after the modifier. For example, if the string to be encoded contains the ‘.t’
+sequence, it will be encoded as ‘ṭ’, the sequence ‘~n’ as ‘ñ’ and so on. Long
+vowels are marked by doubled letter corresponding to the vowel; thus ‘aa’ will
+be encoded to ‘ā’, ‘.rr’ to ‘ṝ’ and so on.
 
 
-.SH AUTHOR
-Copyright (c) 2018, 2020  Vlasta Vesely <vlastavesely@protonmail.ch>
+.SH SEE ALSO
+.BR ascii (7),
+.BR utf8 (7).
+
+
+.SH FURTHER INFORMATION
+More information on Devanagari and the encoding schemes can be found on
+Wikipedia:
+
+.RS 2
+.I https://en.wikipedia.org/wiki/Devanagari
+- the Devanagari script,
+.br
+.I https://en.wikipedia.org/wiki/IAST
+- the IAST scheme,
+.br
+.I https://en.wikipedia.org/wiki/Velthuis
+- the Velthuis scheme.
+.RE
 
 
 .SH REPORTING BUGS
 If you encounter a bug, you should make sure that you are using the latest
-version of the software. If you do and the bug is still present, you can
-report it using either the issues tracker on GitLab or GitHub.
-
-.RS 4
-GitLab: <https://gitlab.com/vlastavesely/sanskrit-iast/issues>
-.br
-GitHub: <https://github.com/vlastavesely/sanskrit-iast/issues>
-.RE
+version of the software. If you are and the bug is still present, you can
+report it on the GitLab issues tracker:
+.IR https://gitlab.com/vlastavesely/sanskrit-iast/issues .
 
 
 .SH LICENSE AND WARRANTY
+Copyright © 2018-2021  Vlasta Vesely
+.RI < vlastavesely@protonmail.ch >.
+
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License version 2 as published by the
 Free Software Foundation.
@@ -101,13 +185,3 @@ Free Software Foundation.
 This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-
-.SH SEE ALSO
-More information on the encoding schemes can be found on Wikipedia:
-
-.RS 4
-IAST scheme: <https://en.wikipedia.org/wiki/IAST>
-.br
-Velthuis scheme: <https://en.wikipedia.org/wiki/Velthuis>
-.RE
