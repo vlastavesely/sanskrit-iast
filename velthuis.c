@@ -34,12 +34,12 @@ static const struct encoder_tuple table[] = {
 	{".n",  "\u1e47"},  {".N",  "\u1e46"},
 	{".s",  "\u1e63"},  {".S",  "\u1e62"},
 
-	{"/",   "m\u0310"}
+	{"/",   "m\u0310"}, {".a",  "'"}
 };
 
 static const struct encoder_tuple *find_tuple(const char *text)
 {
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < ARRAY_SIZE(table); i++) {
 		if (strncmp(text, table[i].from, strlen(table[i].from)) == 0) {
@@ -50,7 +50,20 @@ static const struct encoder_tuple *find_tuple(const char *text)
 	return NULL;
 }
 
-int encode_velthuis_to_iast_punctation(const char *text, char **out)
+static const struct encoder_tuple *find_tuple_reverse(const char *text)
+{
+	unsigned int i;
+
+	for (i = 0; i < ARRAY_SIZE(table); i++) {
+		if (strncmp(text, table[i].to, strlen(table[i].to)) == 0) {
+			return &table[i];
+		}
+	}
+
+	return NULL;
+}
+
+int encode_velthuis_to_iast(const char *text, char **out)
 {
 	const char *str = text, *end = str + strlen(str);
 	const struct encoder_tuple *tuple;
@@ -67,6 +80,35 @@ int encode_velthuis_to_iast_punctation(const char *text, char **out)
 			sprintf(dest, "%s", tuple->to);
 			str += strlen(tuple->from);
 			dest += strlen(tuple->to);
+		} else {
+			sprintf(dest, "%c", *str);
+			str++;
+			dest++;
+		}
+	}
+
+	*out = buf;
+
+	return 0;
+}
+
+int encode_iast_to_velthuis(const char *text, char **out)
+{
+	const char *str = text, *end = str + strlen(str);
+	const struct encoder_tuple *tuple;
+	char *buf, *dest;
+
+	buf = calloc(1, strlen(text) * 2); /* should be enough */
+	if (buf == NULL)
+		return ENOMEM;
+
+	dest = buf;
+	while (str < end) {
+		tuple = find_tuple_reverse(str);
+		if (tuple) {
+			sprintf(dest, "%s", tuple->from);
+			str += strlen(tuple->to);
+			dest += strlen(tuple->from);
 		} else {
 			sprintf(dest, "%c", *str);
 			str++;
