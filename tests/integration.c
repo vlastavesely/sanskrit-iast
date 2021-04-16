@@ -97,9 +97,12 @@ END_TEST
 
 START_TEST(test_velthuis)
 {
-	test_output("./iast \"r.ta.m ca satyam\" -e", "rṭaṃ ca satyam\n");
-	test_output("./iast \"r.ta.m ca satyam\" --encode", "rṭaṃ ca satyam\n");
-	test_output("./iast \"r.ta.m ca satyam\" --velthuis", "rṭaṃ ca satyam\n");
+	test_output("./iast \".rta.m ca satyam\" -e", "ṛtaṃ ca satyam\n");
+	test_output("./iast \".rta.m ca satyam\" --encode", "ṛtaṃ ca satyam\n");
+	test_output("./iast \".rta.m ca satyam\" --velthuis", "ṛtaṃ ca satyam\n");
+
+	/* reverse */
+	test_output("./iast \"ṛtaṃ ca satyam\" -er", ".rta.m ca satyam\n");
 }
 END_TEST
 

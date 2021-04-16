@@ -75,8 +75,13 @@ static int process_input(const char *input, char **out, unsigned int flags)
 	char *tmp = NULL;
 	int ret;
 
-	if (flags & FLAG_REVERSE)
-		return transliterate_latin_to_devanagari(input, out);
+	if (flags & FLAG_REVERSE) {
+		if (flags & FLAG_VELTHUIS) {
+			return encode_iast_to_velthuis(input, out);
+		} else {
+			return transliterate_latin_to_devanagari(input, out);
+		}
+	}
 
 	if (flags & FLAG_VELTHUIS)
 		return encode_velthuis_to_iast(input, out);
