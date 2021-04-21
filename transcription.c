@@ -6,10 +6,11 @@
 #include "transliteration.h"
 #include "utf8.h"
 
-#define SCHWA_CHARACTER 'a'
-#define VIRAMA    0x094d
-#define NUKTA     0x093c
-#define CHUNKSIZE 1024
+#define SCHWA_CHARACTER   'a'
+#define ZERO_WIDTH_JOINER 0x200d
+#define VIRAMA            0x094d
+#define NUKTA             0x093c
+#define CHUNKSIZE         1024
 
 static struct translit_letter table[] = {
 
@@ -189,12 +190,15 @@ int transcript_devanagari_to_czech(const char *devanagari, char **ret)
 		len = utf8_char_length(c);
 		src += len;
 
-		nasal_consonants_filter(latin, &done, prev, c);
+		if (c == ZERO_WIDTH_JOINER)
+			continue;
 
 		if (c == NUKTA) {
 			*ret = NULL;
 			return EHINDI;
 		}
+
+		nasal_consonants_filter(latin, &done, prev, c);
 
 		letter = letter_by_code(c);
 		if (letter) {
@@ -220,7 +224,6 @@ int transcript_devanagari_to_czech(const char *devanagari, char **ret)
 		}
 
 		end_of_word_filter(latin, &done, prev, c);
-
 
 		if (c == 0)
 			break;

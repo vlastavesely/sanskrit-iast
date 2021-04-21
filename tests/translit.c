@@ -73,6 +73,13 @@ START_TEST(test_translit_candrabindu)
 }
 END_TEST
 
+START_TEST(test_translit_zero_width_joiner)
+{
+	test_transliterate_devanagari_to_latin("श‍ृ शृ", "ś‍ṛ śṛ");
+	test_transliterate_latin_to_devanagari("ś‍ṛ śṛ", "श‍ृ शृ");
+}
+END_TEST
+
 START_TEST(test_translit_detect_hindi)
 {
 	char *hindi = NULL;
@@ -87,5 +94,6 @@ void register_translit_tests(TCase *test_case)
 	tcase_add_test(test_case, test_translit_latin_to_devanagari);
 	tcase_add_test(test_case, test_translit_lla_sylable);
 	tcase_add_test(test_case, test_translit_candrabindu);
+	tcase_add_test(test_case, test_translit_zero_width_joiner);
 	tcase_add_test(test_case, test_translit_detect_hindi);
 }

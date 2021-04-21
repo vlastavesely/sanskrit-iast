@@ -29,6 +29,8 @@ START_TEST(test_transcript_devanagari_to_czech)
 	test_transcript("अग्निमीळे", "agnimílé");
 
 	test_transcript("तान्यजत्राँ", "tánjadžatrám");
+
+	test_transcript("श‍ृ शृ", "šr šr"); /* the zero width joiner */
 }
 END_TEST
 

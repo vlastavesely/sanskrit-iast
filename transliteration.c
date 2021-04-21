@@ -5,10 +5,11 @@
 #include "transliteration.h"
 #include "utf8.h"
 
-#define SCHWA_CHARACTER 'a'
-#define VIRAMA    0x094d
-#define NUKTA     0x093c
-#define CHUNKSIZE 1024
+#define SCHWA_CHARACTER   'a'
+#define ZERO_WIDTH_JOINER 0x200d
+#define VIRAMA            0x094d
+#define NUKTA             0x093c
+#define CHUNKSIZE         1024
 
 static struct translit_letter table[] = {
 
@@ -149,7 +150,7 @@ int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 				*(latin + done++) = SCHWA_CHARACTER;
 				break;
 			case VOWEL_SIGN:
-				if (done) {
+				if (done && *(latin + done - 1) == 'a') {
 					/* delete the inherent schwa */
 					done--;
 				}
@@ -159,6 +160,16 @@ int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 				break;
 			}
 		} else {
+			if (c == ZERO_WIDTH_JOINER) {
+				/*
+				 * the zero width joiner joins consonants
+				 * so the inherent schwa has to be removed.
+				 */
+				if (done && *(latin + done - 1) == 'a') {
+					done--;
+				}
+			}
+
 			utf8_pack_char(latin + done, c);
 			done += len;
 		}
@@ -204,7 +215,7 @@ static struct translit_letter *vowel_sign_by_data(const char *data)
 int transliterate_latin_to_devanagari(const char *latin, char **ret)
 {
 	struct translit_letter *letter, *next;
-	unsigned int alloc = 0, done = 0, len;
+	unsigned int alloc = 0, done = 0, c, len;
 	const char *src = latin;
 	char *devanagari = NULL;
 
@@ -240,6 +251,14 @@ int transliterate_latin_to_devanagari(const char *latin, char **ret)
 			done += len;
 			src += strlen(letter->data);
 
+			/* zero width joiner */
+			c = utf8_unpack_char(src);
+			if (c == ZERO_WIDTH_JOINER) {
+				utf8_pack_char(devanagari + done, ZERO_WIDTH_JOINER);
+				src += 3;
+				done += 3;
+			}
+
 			if (letter->type == VOWEL || letter->type == CODA)
 				continue;
 encode_vowel_modifier:
@@ -259,7 +278,11 @@ encode_vowel_modifier:
 				}
 			}
 		} else {
-			devanagari[done++] = *src++;
+			c = utf8_unpack_char(src);
+			len = utf8_char_length(c);
+			utf8_pack_char(devanagari + done, c);
+			done += len;
+			src += len;
 		}
 	}
 
