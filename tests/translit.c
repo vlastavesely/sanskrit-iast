@@ -61,6 +61,10 @@ START_TEST(test_translit_lla_sylable)
 	test_transliterate_devanagari_to_latin("अग्निमीळे", "agnimīḷe");
 	test_transliterate_latin_to_devanagari("agnimīḷe", "अग्निमीळे");
 
+	/* rigveda 1.22.17 */
+	test_transliterate_devanagari_to_latin("समूळ्हमस्य", "samūḷhamasya");
+	test_transliterate_latin_to_devanagari("samūḷhamasya", "समूळ्हमस्य");
+
 	test_transliterate_devanagari_to_latin("चाकॢप्र", "cākḷpra");
 	test_transliterate_latin_to_devanagari("cākḷpra", "चाकॢप्र");
 }
@@ -75,6 +79,7 @@ END_TEST
 
 START_TEST(test_translit_zero_width_joiner)
 {
+	/* from Bhagavadgita */
 	test_transliterate_devanagari_to_latin("श‍ृ शृ", "ś‍ṛ śṛ");
 	test_transliterate_latin_to_devanagari("ś‍ṛ śṛ", "श‍ृ शृ");
 }

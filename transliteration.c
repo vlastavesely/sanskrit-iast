@@ -228,11 +228,17 @@ int transliterate_latin_to_devanagari(const char *latin, char **ret)
 		/* consonant (.l) */
 		if (strncmp(src, "\u1e37", 3) == 0) {
 			letter = letter_by_data(src + 3);
-			if (letter && letter->type == VOWEL) {
+
+			if (letter) {
 				utf8_pack_char(devanagari + done, 0x0933);
 				done += 3;
 				src += 3;
-				goto encode_vowel_modifier;
+				if (letter->type == VOWEL) {
+					goto encode_vowel_modifier;
+				} else {
+					utf8_pack_char(devanagari + done, VIRAMA);
+					done += 3;
+				}
 			}
 		}
 
