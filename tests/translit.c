@@ -79,9 +79,8 @@ END_TEST
 
 START_TEST(test_translit_zero_width_joiner)
 {
-	/* from Bhagavadgita */
-	test_transliterate_devanagari_to_latin("श‍ृ शृ", "ś‍ṛ śṛ");
-	test_transliterate_latin_to_devanagari("ś‍ṛ śṛ", "श‍ृ शृ");
+	test_transliterate_devanagari_to_latin("श‍ृ शृ", "ś\u200dṛ śṛ");
+	test_transliterate_latin_to_devanagari("ś\u200dṛ śṛ", "श‍ृ शृ");
 }
 END_TEST
 
