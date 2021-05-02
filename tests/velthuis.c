@@ -39,8 +39,19 @@ START_TEST(test_encode_iast_to_velthuis)
 }
 END_TEST
 
+START_TEST(test_encode_zwnj_and_zwj)
+{
+	test_encoding_to_iast("ka+i", "ka\u200di");
+	test_encoding_to_velthuis("ka\u200di", "ka+i");
+
+	test_encoding_to_iast("ka_i", "ka\u200ci");
+	test_encoding_to_velthuis("ka\u200ci", "ka_i");
+}
+END_TEST
+
 void register_velthuis_encoder_tests(TCase *test_case)
 {
 	tcase_add_test(test_case, test_encode_velthuis_to_iast);
 	tcase_add_test(test_case, test_encode_iast_to_velthuis);
+	tcase_add_test(test_case, test_encode_zwnj_and_zwj);
 }

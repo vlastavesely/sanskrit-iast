@@ -34,7 +34,9 @@ static const struct encoder_tuple table[] = {
 	{".n",  "\u1e47"},  {".N",  "\u1e46"},
 	{".s",  "\u1e63"},  {".S",  "\u1e62"},
 
-	{"/",   "m\u0310"}, {".a",  "'"}
+	{"/",   "m\u0310"}, {".a",  "'"},
+	{"_",   "\u200c"}, /* ZWNJ */
+	{"+",   "\u200d"} /* ZWJ */
 };
 
 static const struct encoder_tuple *find_tuple(const char *text)
