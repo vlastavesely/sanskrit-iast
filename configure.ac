@@ -14,6 +14,7 @@ AC_DEFINE_UNQUOTED([PROGNAME], ["$PROGNAME"], [Name of the target binary])
 AC_PROG_CC
 AC_PROG_MKDIR_P
 AC_PROG_INSTALL
+AC_CHECK_TOOL([AR], [ar])
 
 # Checks for libraries.
 PKG_CHECK_MODULES(CHECK, check)
