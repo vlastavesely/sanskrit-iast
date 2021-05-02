@@ -121,7 +121,7 @@ static struct translit_letter *letter_by_code(unsigned int c)
 
 int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 {
-	struct translit_letter *letter;
+	struct translit_letter *letter, *prev = NULL;
 	unsigned int c, alloc = 0, done = 0, len;
 	const char *src = devanagari;
 	char *latin = NULL;
@@ -155,6 +155,11 @@ int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 					done--;
 				}
 			default:
+				if (letter->type == VOWEL && prev) {
+					utf8_pack_char(latin + done, 0x200c);
+					done += 3;
+				}
+
 				strcpy(latin + done, letter->data);
 				done += strlen(letter->data);
 				break;
@@ -176,6 +181,8 @@ int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 
 		if (c == 0)
 			break;
+
+		prev = letter;
 	}
 
 	*ret = latin;
@@ -250,6 +257,19 @@ int transliterate_latin_to_devanagari(const char *latin, char **ret)
 			continue;
 		}
 
+		/* zero-width non-joiner */
+		if (strncmp(src, "\u200c", 3) == 0) {
+			if (letter && (letter->code == VIRAMA || letter->type == CONSONANT)) {
+				next = letter_by_data(src + 3);
+				if (next->type == CONSONANT) {
+					utf8_pack_char(devanagari + done, 0x200c);
+					done += 3;
+				}
+			}
+			src += 3;
+			continue;
+		}
+
 		letter = letter_by_data(src);
 		if (letter) {
 			utf8_pack_char(devanagari + done, letter->code);
@@ -261,8 +281,8 @@ int transliterate_latin_to_devanagari(const char *latin, char **ret)
 			c = utf8_unpack_char(src);
 			if (c == ZERO_WIDTH_JOINER) {
 				utf8_pack_char(devanagari + done, ZERO_WIDTH_JOINER);
-				src += 3;
 				done += 3;
+				src += 3;
 			}
 
 			if (letter->type == VOWEL || letter->type == CODA)
