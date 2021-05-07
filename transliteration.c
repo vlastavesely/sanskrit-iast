@@ -221,7 +221,7 @@ static struct translit_letter *vowel_sign_by_data(const char *data)
 
 int transliterate_latin_to_devanagari(const char *latin, char **ret)
 {
-	struct translit_letter *letter, *next;
+	struct translit_letter *letter = NULL, *next;
 	unsigned int alloc = 0, done = 0, c, len;
 	const char *src = latin;
 	char *devanagari = NULL;
