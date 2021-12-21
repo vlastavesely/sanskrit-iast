@@ -8,6 +8,7 @@
 #define FLAG_VELTHUIS	1 << 1
 #define FLAG_CZECH	1 << 2
 #define FLAG_ASCII	1 << 3
+#define FLAG_DEVANAGARI	1 << 4
 
 static const char *usage_str =
 	PROGNAME ", a helper for Sanskrit transliteration.\n"
@@ -19,6 +20,8 @@ static const char *usage_str =
 	"  -f, --file        the input file for transliteration\n"
 	"  -r, --reverse     reverse transliteration (from Latin to Devanagari)\n"
 	"  -e, --encode      convert an ASCII text to IAST using the Velthuis scheme\n"
+	"  -a, --ascii       convert a Devanagari text to Velthuis text rather than to IAST\n"
+	"  -d, --devanagari  when encoding, output a Devanagari text rather than IAST\n"
 	"  -c, --czech       transcript Devanagari to Czech language (experimental)\n"
 	"  -h, --help        show this help and exit\n"
 	"  -v, --version     show version number and exit\n"
@@ -35,7 +38,7 @@ static const char *usage_str =
 	"\n"
 	"  For more information see the iast(1) manual page.\n";
 
-static const char *short_opts = "f:reachv";
+static const char *short_opts = "f:readchv";
 
 static const struct option long_opts[] = {
 	{"file",       required_argument,  0, 'f'},
@@ -43,6 +46,7 @@ static const struct option long_opts[] = {
 	{"encode",     no_argument,        0, 'e'},
 	{"velthuis",   no_argument,        0, 'e'},
 	{"ascii",      no_argument,        0, 'a'},
+	{"devanagari", no_argument,        0, 'd'},
 	{"czech",      no_argument,        0, 'c'},
 	{"help",       no_argument,        0, 'h'},
 	{"version",    no_argument,        0, 'v'},
@@ -83,8 +87,19 @@ static int process_input(const char *input, char **out, unsigned int flags)
 		}
 	}
 
-	if (flags & FLAG_VELTHUIS)
-		return encode_velthuis_to_iast(input, out);
+	if (flags & FLAG_VELTHUIS) {
+		if (flags & FLAG_DEVANAGARI) {
+			ret = encode_velthuis_to_iast(input, &tmp);
+			if (ret != 0)
+				return ret;
+
+			ret = transliterate_latin_to_devanagari(tmp, out);
+			free(tmp);
+			return ret;
+		} else {
+			return encode_velthuis_to_iast(input, out);
+		}
+	}
 
 	if (flags & FLAG_CZECH)
 		return transcript_devanagari_to_czech(input, out);
@@ -203,6 +218,9 @@ int main(int argc, const char **argv)
 			break;
 		case 'a':
 			flags |= FLAG_ASCII;
+			break;
+		case 'd':
+			flags |= FLAG_DEVANAGARI;
 			break;
 		case 'c':
 			flags |= FLAG_CZECH;

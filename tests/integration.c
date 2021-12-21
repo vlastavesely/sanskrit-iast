@@ -103,6 +103,9 @@ START_TEST(test_velthuis)
 
 	/* reverse */
 	test_output("./iast \"ṛtaṃ ca satyam\" -er", ".rta.m ca satyam\n");
+
+	/* force Devanagari output */
+	test_output("./iast \"agnii.h\" -ed", "अग्नीः\n");
 }
 END_TEST
 
