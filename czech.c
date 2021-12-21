@@ -2,7 +2,7 @@
 /* https://cs.wikipedia.org/wiki/Wikipedie:Transkripce_hind%C5%A1tiny */
 
 #include "compat.h"
-#include "transcription.h"
+#include "czech.h"
 #include "transliteration.h"
 #include "utf8.h"
 
@@ -192,11 +192,6 @@ int transcript_devanagari_to_czech(const char *devanagari, char **ret)
 
 		if (c == ZERO_WIDTH_JOINER)
 			continue;
-
-		if (c == NUKTA) {
-			*ret = NULL;
-			return EHINDI;
-		}
 
 		nasal_consonants_filter(latin, &done, prev, c);
 

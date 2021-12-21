@@ -1,7 +1,7 @@
 #include "test.h"
-#include "transcript.h"
+#include "czech.h"
 #include "../compat.h"
-#include "../transcription.h"
+#include "../czech.h"
 
 static void test_transcript(const char *devanagari, const char *latin)
 {
@@ -34,18 +34,7 @@ START_TEST(test_transcript_devanagari_to_czech)
 }
 END_TEST
 
-START_TEST(test_transcript_detect_hindi)
-{
-	char *czech;
-	int ret;
-
-	ret = transcript_devanagari_to_czech("लड़की", &czech);
-	ck_assert_int_eq(EHINDI, ret);
-}
-END_TEST
-
-void register_transcript_tests(TCase *test_case)
+void register_transcript_czech_tests(TCase *test_case)
 {
 	tcase_add_test(test_case, test_transcript_devanagari_to_czech);
-	tcase_add_test(test_case, test_transcript_detect_hindi);
 }

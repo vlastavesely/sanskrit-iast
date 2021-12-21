@@ -1,14 +1,16 @@
 #include "compat.h"
 #include "transliteration.h"
-#include "transcription.h"
+#include "czech.h"
+#include "hindi.h"
 #include "velthuis.h"
 #include "config.h"
 
 #define FLAG_REVERSE	1 << 0
 #define FLAG_VELTHUIS	1 << 1
 #define FLAG_CZECH	1 << 2
-#define FLAG_ASCII	1 << 3
-#define FLAG_DEVANAGARI	1 << 4
+#define FLAG_HINDI	1 << 3
+#define FLAG_ASCII	1 << 4
+#define FLAG_DEVANAGARI	1 << 5
 
 static const char *usage_str =
 	PROGNAME ", a helper for Sanskrit transliteration.\n"
@@ -23,6 +25,7 @@ static const char *usage_str =
 	"  -a, --ascii       convert a Devanagari text to Velthuis text rather than to IAST\n"
 	"  -d, --devanagari  when encoding, output a Devanagari text rather than IAST\n"
 	"  -c, --czech       transcript Devanagari to Czech language (experimental)\n"
+	"  -H, --hindi       transcript Hindi from Devanagari to Latin (experimental)\n"
 	"  -h, --help        show this help and exit\n"
 	"  -v, --version     show version number and exit\n"
 	"\n"
@@ -38,7 +41,7 @@ static const char *usage_str =
 	"\n"
 	"  For more information see the iast(1) manual page.\n";
 
-static const char *short_opts = "f:readchv";
+static const char *short_opts = "f:readcHhv";
 
 static const struct option long_opts[] = {
 	{"file",       required_argument,  0, 'f'},
@@ -48,6 +51,7 @@ static const struct option long_opts[] = {
 	{"ascii",      no_argument,        0, 'a'},
 	{"devanagari", no_argument,        0, 'd'},
 	{"czech",      no_argument,        0, 'c'},
+	{"hindi",      no_argument,        0, 'H'},
 	{"help",       no_argument,        0, 'h'},
 	{"version",    no_argument,        0, 'v'},
 	{0, 0, 0, 0}
@@ -104,6 +108,9 @@ static int process_input(const char *input, char **out, unsigned int flags)
 	if (flags & FLAG_CZECH)
 		return transcript_devanagari_to_czech(input, out);
 
+	if (flags & FLAG_HINDI)
+		return transcript_devanagari_to_hindi(input, out);
+
 	if (flags & FLAG_ASCII) {
 		ret = transliterate_devanagari_to_latin(input, &tmp);
 		if (ret != 0)
@@ -127,9 +134,6 @@ static int process_string(const char *input, unsigned int flags)
 	switch (ret) {
 	case 0:
 		fprintf(stdout, "%s", output);
-		break;
-	case EHINDI:
-		error("the input text is Hindi.");
 		break;
 	default:
 		error("unexpected error.");
@@ -224,6 +228,9 @@ int main(int argc, const char **argv)
 			break;
 		case 'c':
 			flags |= FLAG_CZECH;
+			break;
+		case 'H':
+			flags |= FLAG_HINDI;
 			break;
 		case 'h':
 			print_usage();

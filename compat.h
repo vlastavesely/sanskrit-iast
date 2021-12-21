@@ -12,8 +12,4 @@
 
 #define ARRAY_SIZE(a) sizeof(a) / sizeof(*a)
 
-enum err {
-	EHINDI = 1
-};
-
 #endif /* __COMPAT_H */

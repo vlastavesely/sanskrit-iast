@@ -8,7 +8,6 @@
 #define SCHWA_CHARACTER   'a'
 #define ZERO_WIDTH_JOINER 0x200d
 #define VIRAMA            0x094d
-#define NUKTA             0x093c
 #define CHUNKSIZE         1024
 
 static struct translit_letter table[] = {
@@ -135,11 +134,6 @@ int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 		c = utf8_unpack_char(src);
 		len = utf8_char_length(c);
 		src += len;
-
-		if (c == NUKTA) {
-			*ret = NULL;
-			return EHINDI;
-		}
 
 		letter = letter_by_code(c);
 		if (letter) {
