@@ -33,6 +33,8 @@ static struct translit_letter table[] = {
 	{0x0913, VOWEL, "o"},            /* 14 */
 	{0x0911, VOWEL, "o"},            /* candra o */
 	{0x0912, VOWEL, "o"},            /* short o */
+	{0x090d, VOWEL, "e"},            /* candra e */
+	{0x090e, VOWEL, "e"},            /* short e */
 
 	/* Consonants */
 	{0x0916, CONSONANT, "kh"},       /* 01 */
@@ -84,6 +86,7 @@ static struct translit_letter table[] = {
 	{0x0903, CODA, "h"},             /* visarga */
 	{0x093d, CODA, "'"},             /* avagrada (') */
 	{0x0901, CODA, "n"},             /* candrabindu */
+	{0x0970, CODA, "."},             /* abbreviation mark */
 
 	/* Numbers */
 	{0x0966, NUMBER, "0"},
@@ -110,6 +113,8 @@ static struct translit_letter table[] = {
 	{0x0962, VOWEL_SIGN, "l"},
 	{0x0963, VOWEL_SIGN, "ll"},
 	{0x0947, VOWEL_SIGN, "e"},
+	{0x0945, VOWEL_SIGN, "e"},       /* candra e */
+	{0x0946, VOWEL_SIGN, "e"},       /* short e */
 	{0x094b, VOWEL_SIGN, "o"},
 	{0x0949, VOWEL_SIGN, "o"},       /* candra o */
 	{0x094a, VOWEL_SIGN, "o"},       /* short o */
