@@ -2,56 +2,64 @@
 #include "velthuis.h"
 #include "../velthuis.h"
 
-static void test_encoding_to_iast(const char *in, const char *expected)
-{
-	char *out;
+#define ZWJ  "\u200d"
+#define ZWNJ "\u200c"
 
-	encode_velthuis_to_iast(in, &out);
-	ck_assert_str_eq(expected, out);
-	free(out);
+static void test_velthuis(const char *velthuis, const char *iast)
+{
+	char *a, *b;
+	int ret;
+
+	ret = encode_velthuis_to_iast(velthuis, &a);
+	ck_assert_int_eq(0, ret);
+	ck_assert_str_eq(iast, a);
+
+	ret = encode_iast_to_velthuis(a, &b);
+	ck_assert_int_eq(0, ret);
+	ck_assert_str_eq(velthuis, b);
+
+	free(a);
+	free(b);
 }
 
-static void test_encoding_to_velthuis(const char *in, const char *expected)
+static void test_velthuis_oneway(const char *velthuis, const char *iast)
 {
-	char *out;
+	char *str;
+	int ret;
 
-	encode_iast_to_velthuis(in, &out);
-	ck_assert_str_eq(expected, out);
-	free(out);
+	ret = encode_velthuis_to_iast(velthuis, &str);
+	ck_assert_int_eq(0, ret);
+	ck_assert_str_eq(iast, str);
+
+	free(str);
 }
 
-START_TEST(test_encode_velthuis_to_iast)
+START_TEST(test_velthuis_encoding)
 {
-	test_encoding_to_iast("sa.msk.rtam", "saṃskṛtam");
-	test_encoding_to_iast("yoga.h", "yogaḥ");
-	test_encoding_to_iast("tantra\"saastram", "tantraśāstram");
-	test_encoding_to_iast("Aa AA - II Ii - .RR .Rr", "Ā Ā - Ī Ī - Ṝ Ṝ");
-	test_encoding_to_iast("atha prathamo.adhyaaya.h", "atha prathamo'dhyāyaḥ");
-}
-END_TEST
-
-START_TEST(test_encode_iast_to_velthuis)
-{
-	test_encoding_to_velthuis("saṃskṛtam", "sa.msk.rtam");
-	test_encoding_to_velthuis("tantraśāstram", "tantra\"saastram");
-	test_encoding_to_velthuis("Ā - Ī - Ṝ", "Aa - Ii - .Rr");
-	test_encoding_to_velthuis("atha prathamo'dhyāyaḥ", "atha prathamo.adhyaaya.h");
+	test_velthuis("sa.msk.rtam", "saṃskṛtam");
+	test_velthuis("yoga.h", "yogaḥ");
+	test_velthuis("tantra\"saastram", "tantraśāstram");
+	test_velthuis("Aa Ii .Rr", "Ā Ī Ṝ");
+	test_velthuis("atha prathamo.adhyaaya.h", "atha prathamo'dhyāyaḥ");
 }
 END_TEST
 
 START_TEST(test_encode_zwnj_and_zwj)
 {
-	test_encoding_to_iast("ka+i", "ka\u200di");
-	test_encoding_to_velthuis("ka\u200di", "ka+i");
+	test_velthuis("ka+i", "ka"ZWJ"i");
+	test_velthuis("ka-i", "ka"ZWNJ"i");
+}
+END_TEST
 
-	test_encoding_to_iast("ka_i", "ka\u200ci");
-	test_encoding_to_velthuis("ka\u200ci", "ka_i");
+START_TEST(test_encode_oneway)
+{
+	test_velthuis_oneway("puuu puu{}u pu{}uu", "pūu pūu puū");
 }
 END_TEST
 
 void register_velthuis_encoder_tests(TCase *test_case)
 {
-	tcase_add_test(test_case, test_encode_velthuis_to_iast);
-	tcase_add_test(test_case, test_encode_iast_to_velthuis);
+	tcase_add_test(test_case, test_velthuis_encoding);
 	tcase_add_test(test_case, test_encode_zwnj_and_zwj);
+	tcase_add_test(test_case, test_encode_oneway);
 }

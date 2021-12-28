@@ -35,8 +35,8 @@ static const struct encoder_tuple table[] = {
 	{".s",  "\u1e63"},  {".S",  "\u1e62"},
 
 	{"/",   "m\u0310"}, {".a",  "'"},
-	{"_",   "\u200c"}, /* ZWNJ */
-	{"+",   "\u200d"} /* ZWJ */
+	{"-",   "\u200c"}, /* ZWNJ */
+	{"+",   "\u200d"}  /* ZWJ */
 };
 
 static const struct encoder_tuple *find_tuple(const char *text)
@@ -82,6 +82,8 @@ int encode_velthuis_to_iast(const char *text, char **out)
 			sprintf(dest, "%s", tuple->to);
 			str += strlen(tuple->from);
 			dest += strlen(tuple->to);
+		} else if (strncmp(str, "{}", 2) == 0) {
+			str += 2;
 		} else {
 			sprintf(dest, "%c", *str);
 			str++;
