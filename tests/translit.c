@@ -49,6 +49,9 @@ START_TEST(test_translit_vedic)
 
 	/* rigveda 3.5.2 */
 	test_translit("पूर्वीर्ऋतस्य", "pūrvīr"ZWNJ"ṛtasya");
+
+	/* vedic stresses */
+	test_translit("अ॒ग्निमी॑ळे पु॒रोहि॑तं", "a\\_gnimī\\'ḷe pu\\_rohi\\'taṃ");
 }
 END_TEST
 
