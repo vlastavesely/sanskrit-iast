@@ -31,6 +31,12 @@ static struct translit_letter table[] = {
 	{0x090f, VOWEL, "e"},            /* 13 */
 	{0x0913, VOWEL, "o"},            /* 14 */
 
+	/* Codas */
+	{0x0902, CODA, "\u1e43"},        /* anusvara (.m) */
+	{0x0903, CODA, "\u1e25"},        /* visarga (.h) */
+	{0x093d, CODA, "'"},             /* avagrada (') */
+	{0x0901, CODA, "m\u0310"},       /* candrabindu */
+
 	/* Consonants */
 	{0x0916, CONSONANT, "kh"},       /* 01 */
 	{0x0918, CONSONANT, "gh"},       /* 02 */
@@ -66,12 +72,6 @@ static struct translit_letter table[] = {
 	{0x092e, CONSONANT, "m"},        /* 32 */
 	{0x0935, CONSONANT, "v"},        /* 33 */
 	{0x0933, CONSONANT, "\u1e37"},   /* (.l) */
-
-	/* Codas */
-	{0x0902, CODA, "\u1e43"},        /* anusvara (.m) */
-	{0x0903, CODA, "\u1e25"},        /* visarga (.h) */
-	{0x093d, CODA, "'"},             /* avagrada (') */
-	{0x0901, CODA, "m\u0310"},       /* candrabindu */
 
 	/* Numbers */
 	{0x0966, NUMBER, "0"},
@@ -118,6 +118,12 @@ static struct translit_letter *letter_by_code(unsigned int c)
 	return NULL;
 }
 
+static inline int is_vowel_sign(unsigned int c)
+{
+	struct translit_letter *letter = letter_by_code(c);
+	return letter && letter->type == VOWEL_SIGN;
+}
+
 int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 {
 	struct translit_letter *letter, *prev = NULL;
@@ -159,12 +165,10 @@ int transliterate_devanagari_to_latin(const char *devanagari, char **ret)
 				break;
 			}
 		} else {
-			if (c == ZERO_WIDTH_JOINER) {
-				/*
-				 * the zero width joiner joins consonants
-				 * so the inherent schwa has to be removed.
-				 */
-				if (done && *(latin + done - 1) == 'a') {
+			if (c == ZERO_WIDTH_JOINER && done) {
+				/* The ZWJ can substitute a virama so we need
+				 * to remove the inherent schwa. */
+				if (is_vowel_sign(utf8_unpack_char(src))) {
 					done--;
 				}
 			}
@@ -213,10 +217,15 @@ static struct translit_letter *vowel_sign_by_data(const char *data)
 	return NULL;
 }
 
+#define PACK_LETTER(d, c) {		\
+	utf8_pack_char(d, c);		\
+	done += utf8_char_length(c);	\
+}
+
 int transliterate_latin_to_devanagari(const char *latin, char **ret)
 {
-	struct translit_letter *letter = NULL, *next;
-	unsigned int alloc = 0, done = 0, c, len;
+	struct translit_letter *letter = NULL, *next, *last = NULL;
+	unsigned int alloc = 0, done = 0, c = 0;
 	const char *src = latin;
 	char *devanagari = NULL;
 
@@ -226,38 +235,13 @@ int transliterate_latin_to_devanagari(const char *latin, char **ret)
 			alloc += CHUNKSIZE;
 		}
 
-		/* consonant (.l) */
-		if (strncmp(src, "\u1e37", 3) == 0) {
-			letter = letter_by_data(src + 3);
-
-			if (letter) {
-				utf8_pack_char(devanagari + done, 0x0933);
-				done += 3;
-				src += 3;
-				if (letter->type == VOWEL) {
-					goto encode_vowel_modifier;
-				} else {
-					utf8_pack_char(devanagari + done, VIRAMA);
-					done += 3;
-				}
-			}
-		}
-
-		/* candrabindu */
-		if (strncmp(src, "m\u0310", 3) == 0) {
-			utf8_pack_char(devanagari + done, 0x0901);
-			done += 3;
-			src += 3;
-			continue;
-		}
-
 		/* zero-width non-joiner */
 		if (strncmp(src, "\u200c", 3) == 0) {
-			if (letter && (letter->code == VIRAMA || letter->type == CONSONANT)) {
+			if (last) {
+				/* not at the beginning of a word */
 				next = letter_by_data(src + 3);
-				if (next->type == CONSONANT) {
-					utf8_pack_char(devanagari + done, 0x200c);
-					done += 3;
+				if (next && next->type == CONSONANT) {
+					PACK_LETTER(devanagari + done, 0x200c);
 				}
 			}
 			src += 3;
@@ -266,43 +250,62 @@ int transliterate_latin_to_devanagari(const char *latin, char **ret)
 
 		letter = letter_by_data(src);
 		if (letter) {
+			if (letter->code == 0x090c) { /* independent ‘.l’ vowel */
+				next = letter_by_data(src + 3);
+				if (last || (next && next->type == VOWEL && next->code != 0x090c)) {
+					letter = letter_by_code(0x0933); /* .la */
+				}
+			}
+encode_consonant:
+			/* A consonant or an initial vowel */
 			utf8_pack_char(devanagari + done, letter->code);
-			len = utf8_char_length(letter->code);
-			done += len;
+			PACK_LETTER(devanagari + done, letter->code);
 			src += strlen(letter->data);
 
-			/* zero width joiner */
 			c = utf8_unpack_char(src);
-			if (c == ZERO_WIDTH_JOINER) {
-				utf8_pack_char(devanagari + done, ZERO_WIDTH_JOINER);
-				done += 3;
+			if (c == ZERO_WIDTH_JOINER)
 				src += 3;
-			}
+
+			last = letter;
 
 			if (letter->type == VOWEL || letter->type == CODA)
 				continue;
-encode_vowel_modifier:
-			next = vowel_sign_by_data(src);
-			if (next) {
-				utf8_pack_char(devanagari + done, next->code);
-				done += utf8_char_length(next->code);
-				src += strlen(next->data);
-			} else {
-				if (*src == SCHWA_CHARACTER) {
-					src++;
-				} else {
-					if (letter->type == CONSONANT) {
-						utf8_pack_char(devanagari + done, VIRAMA);
-						done += utf8_char_length(VIRAMA);
+
+			/* A vowel modifier (if any) */
+			letter = vowel_sign_by_data(src);
+			if (letter) {
+				if (letter->code == 0x0962) {
+					next = letter_by_data(src + 3);
+					if (next && next->type == VOWEL) {
+						/* consonant ‘.la’ */
+						letter = letter_by_code(0x0933);
+						if (last && last->type == CONSONANT)
+							PACK_LETTER(devanagari + done, VIRAMA);
+
+						goto encode_consonant;
 					}
 				}
+
+				if (c == ZERO_WIDTH_JOINER)
+					PACK_LETTER(devanagari + done, c);
+
+				PACK_LETTER(devanagari + done, letter->code);
+				src += strlen(letter->data);
+
+			} else if (*src == SCHWA_CHARACTER) {
+				src++;
+
+			} else {
+				if (last->type == CONSONANT) {
+					PACK_LETTER(devanagari + done, VIRAMA);
+				}
 			}
+
 		} else {
 			c = utf8_unpack_char(src);
-			len = utf8_char_length(c);
-			utf8_pack_char(devanagari + done, c);
-			done += len;
-			src += len;
+			PACK_LETTER(devanagari + done, c);
+			src += utf8_char_length(c);
+			last = NULL;
 		}
 	}
 
