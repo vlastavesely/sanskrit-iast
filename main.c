@@ -41,10 +41,11 @@ static const char *usage_str =
 	"\n"
 	"  For more information see the iast(1) manual page.\n";
 
-static const char *short_opts = "f:readcHhv";
+static const char *short_opts = "f:o:readcHhv";
 
 static const struct option long_opts[] = {
 	{"file",       required_argument,  0, 'f'},
+	{"output",     required_argument,  0, 'o'},
 	{"reverse",    no_argument,        0, 'r'},
 	{"encode",     no_argument,        0, 'e'},
 	{"velthuis",   no_argument,        0, 'e'},
@@ -128,7 +129,7 @@ static int process_input(const char *input, char **out, unsigned int flags)
 	return iast_transliterate(input, out, flags);
 }
 
-static int process_string(const char *input, unsigned int flags)
+static int process_string(int fd, const char *input, unsigned int flags)
 {
 	char *output = NULL;
 	int ret;
@@ -137,7 +138,7 @@ static int process_string(const char *input, unsigned int flags)
 
 	switch (ret) {
 	case 0:
-		fprintf(stdout, "%s", output);
+		write(fd, output, strlen(output));
 		break;
 	default:
 		error("unexpected error.");
@@ -213,11 +214,11 @@ static int read_file(char **out, const char *path)
 
 int main(int argc, const char **argv)
 {
-	int i, retval, c = 0, opt_index = 0;
+	int i, retval, c = 0, opt_index = 0, out = STDOUT_FILENO;
 	const char *files[argc];
 	unsigned int nfiles = 0;
 	unsigned int flags = 0;
-	char *input;
+	char *input, *output = NULL;
 
 	if (argc == 1) {
 		print_usage();
@@ -232,6 +233,9 @@ int main(int argc, const char **argv)
 		switch (c) {
 		case 'f':
 			files[nfiles++] = optarg;
+			break;
+		case 'o':
+			output = optarg;
 			break;
 		case 'r':
 			flags |= FLAG_REVERSE;
@@ -270,13 +274,21 @@ int main(int argc, const char **argv)
 	if (retval != 0)
 		return retval;
 
+	if (output) {
+		out = open(output, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+		if (out == -1) {
+			error("failed to open '%s' [%d].", output, errno);
+			return errno;
+		}
+	}
+
 	while (optind < argc) {
 		const char *arg = argv[optind++];
 
-		retval = process_string(arg, flags);
+		retval = process_string(out, arg, flags);
 		if (retval != 0)
 			return retval;
-		putchar('\n');
+		write(out, "\n", 1);
  	}
 
 	for (i = 0; i < nfiles; i++) {
@@ -290,7 +302,7 @@ int main(int argc, const char **argv)
 			error("failed to read file '%s'.", files[i]);
 			return retval;
 		}
-		retval = process_string(input, flags);
+		retval = process_string(out, input, flags);
 		free(input);
 		if (retval != 0)
 			return retval;

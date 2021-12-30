@@ -70,7 +70,7 @@ uninstall:
 
 clean:
 	$(RM) $(PROGNAME) tests/test $(PROGNAME).1.gz
-	$(RM) -r *.a *.o */*.o */*.d *.d *.gcda *.gcno tests/coverage
+	$(RM) -r *.a *.o */*.o */*.d *.d *.gcda *.gcno tests/coverage */*.test
 
 clean-aux:
 	$(RM) -r $(AUX_FILES)

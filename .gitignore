@@ -4,6 +4,7 @@
 /iast
 /tests/test
 /tests/coverage
+/tests/*.test
 *.1.gz
 *.gcno
 *.gcda

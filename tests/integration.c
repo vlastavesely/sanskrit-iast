@@ -122,6 +122,23 @@ START_TEST(test_ascii)
 }
 END_TEST
 
+#define TEST_FILE "./tests/output.test"
+START_TEST(test_file_output)
+{
+	char *str;
+
+	unlink(TEST_FILE);
+	str = exec_command("./iast -eo "TEST_FILE" .rta.m");
+	free(str);
+
+	str = read_file(TEST_FILE);
+	ck_assert_str_eq("ṛtaṃ\n", str);
+	free(str);
+
+	unlink(TEST_FILE);
+}
+END_TEST
+
 START_TEST(test_version)
 {
 	test_output("./iast -v", "iast v2.0.0\n");
@@ -161,6 +178,7 @@ void register_integration_tests(TCase *test_case)
 	tcase_add_test(test_case, test_transcript_hindi);
 	tcase_add_test(test_case, test_velthuis);
 	tcase_add_test(test_case, test_ascii);
+	tcase_add_test(test_case, test_file_output);
 	tcase_add_test(test_case, test_version);
 	tcase_add_test(test_case, test_usage);
 	tcase_add_test(test_case, test_errors);
