@@ -148,6 +148,8 @@ START_TEST(test_errors)
 {
 	test_output("./iast -x 2>&1", "[iast] error: unrecognised option '-x'.\n");
 	test_output("./iast -f xxx 2>&1", "[iast] error: failed to read file 'xxx'.\n");
+	test_output("./iast -Hr 2>&1", "[iast] error: invalid combination of '-H' and '-r'.\n");
+	test_output("./iast -cr 2>&1", "[iast] error: invalid combination of '-c' and '-r'.\n");
 }
 END_TEST
 

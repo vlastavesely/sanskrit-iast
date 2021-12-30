@@ -78,55 +78,59 @@ static void error(const char *msg, ...)
 	va_end(params);
 }
 
-static int process_input(const char *input, char **out, unsigned int flags)
+static int velthuis_encode(const char *in, char **out, unsigned int flags)
 {
 	char *tmp = NULL;
 	int ret;
 
-	if (flags & FLAG_REVERSE) {
-		if (flags & FLAG_VELTHUIS) {
-			return encode_iast_to_velthuis(input, out);
-		} else {
-			return transliterate_latin_to_devanagari(input, out);
-		}
+	if (flags & FLAG_REVERSE)
+		return encode_iast_to_velthuis(in, out);
+
+	ret = encode_velthuis_to_iast(in, out);
+	if (flags & FLAG_DEVANAGARI) {
+		ret = transliterate_latin_to_devanagari(*out, &tmp);
+		free(*out);
+		*out = tmp;
 	}
 
-	if (flags & FLAG_VELTHUIS) {
-		if (flags & FLAG_DEVANAGARI) {
-			ret = encode_velthuis_to_iast(input, &tmp);
-			if (ret != 0)
-				return ret;
+	return ret;
+}
 
-			ret = transliterate_latin_to_devanagari(tmp, out);
-			free(tmp);
-			return ret;
-		} else {
-			return encode_velthuis_to_iast(input, out);
-		}
+static int iast_transliterate(const char *in, char **out, unsigned int flags)
+{
+	char *tmp = NULL;
+	int ret;
+
+	if (flags & FLAG_REVERSE)
+		return transliterate_latin_to_devanagari(in, out);
+
+	ret = transliterate_devanagari_to_latin(in, out);
+	if (flags & FLAG_ASCII) {
+		ret = encode_iast_to_velthuis(*out, &tmp);
+		free(*out);
+		*out = tmp;
 	}
+
+	return ret;
+}
+
+static int process_input(const char *input, char **out, unsigned int flags)
+{
+	if (flags & FLAG_HINDI)
+		return transcript_devanagari_to_hindi(input, out);
 
 	if (flags & FLAG_CZECH)
 		return transcript_devanagari_to_czech(input, out);
 
-	if (flags & FLAG_HINDI)
-		return transcript_devanagari_to_hindi(input, out);
+	if (flags & FLAG_VELTHUIS)
+		return velthuis_encode(input, out, flags);
 
-	if (flags & FLAG_ASCII) {
-		ret = transliterate_devanagari_to_latin(input, &tmp);
-		if (ret != 0)
-			return ret;
-
-		ret = encode_iast_to_velthuis(tmp, out);
-		free(tmp);
-		return ret;
-	} else {
-		return transliterate_devanagari_to_latin(input, out);
-	}
+	return iast_transliterate(input, out, flags);
 }
 
 static int process_string(const char *input, unsigned int flags)
 {
-	char *output;
+	char *output = NULL;
 	int ret;
 
 	ret = process_input(input, &output, flags);
@@ -143,6 +147,21 @@ static int process_string(const char *input, unsigned int flags)
 	free(output);
 
 	return ret;
+}
+
+static int validate_flags(unsigned int flags)
+{
+	if (flags & FLAG_HINDI && flags & FLAG_REVERSE) {
+		error("invalid combination of '-H' and '-r'.");
+		return -EINVAL;
+	}
+
+	if (flags & FLAG_CZECH && flags & FLAG_REVERSE) {
+		error("invalid combination of '-c' and '-r'.");
+		return -EINVAL;
+	}
+
+	return 0;
 }
 
 #define CHUNKSIZE 1024
@@ -246,6 +265,10 @@ int main(int argc, const char **argv)
 			break;
 		}
 	}
+
+	retval = validate_flags(flags);
+	if (retval != 0)
+		return retval;
 
 	while (optind < argc) {
 		const char *arg = argv[optind++];
