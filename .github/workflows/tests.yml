@@ -1,0 +1,35 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build_linux:
+    name: Build - Linux
+    runs-on: [ ubuntu-latest ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: configure
+      run: sh autogen.sh && sh configure
+    - name: make
+      run: make
+    - name: make test
+      run: make test
+
+  build_windows:
+    name: Build - Windows
+    runs-on: [ windows-latest ]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: cygwin/cygwin-install-action@v1
+      with:
+        packages: autoconf,make,git,gcc,check
+    - name: configure
+      run: C:\cygwin\bin\sh.exe -lc 'sh autogen.sh && sh configure'
+    - name: make
+      run: C:\cygwin\bin\sh.exe -lc 'make'
+    - name: make test
+      run: C:\cygwin\bin\sh.exe -lc 'make test'
