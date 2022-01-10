@@ -1,13 +1,16 @@
 Sanskrit Transliteration Tool
 =============================
 This is a tool for romanisation of Sanskrit texts written in the Devanagari
-script. It handles only the classic Sanskrit character set so it cannot be
-used to transliterate modern Hindi.
+script using the International Alphabet of Sanskrit Transliteration (IAST).
 
 The program is able to perform bidirectional transliteration: by default, it
-romanises Sanskrit texts written in Devanagari using the International Alphabet
-of Sanskrit Transliteration (IAST); alternatively it can be used for reverse
-transliteration of IAST encoded texts into Devanagari.
+romanises Sanskrit texts written in Devanagari using the IAST scheme;
+alternatively it can be used for reverse transliteration of IAST encoded texts
+into Devanagari.
+
+Given to the fact that the IAST standard handles only the classic Sanskrit
+character set, it cannot be used for lossless transliteration of modern Hindi.
+It can, however, be used for lossy transcription of Hindi.
 
 For more details on the usage of the program and the requirements for the input
 data, see the included manual page iast(1).

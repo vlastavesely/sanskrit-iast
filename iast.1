@@ -1,4 +1,4 @@
-.TH "iast" "1" "16 April 2021" "sanskrit-iast" "Sanskrit Transliteration"
+.TH "iast" "1" "10 January 2022" "sanskrit-iast" "Sanskrit Transliteration"
 
 .SH NAME
 .B iast
@@ -35,9 +35,8 @@ noted that as the
 .I IAST
 standard does not handle the Devanagari characters with the diacritic marks
 (e.g., the nukta), it cannot be used to transliterate modern Hindi texts.
-Furthermore, since there are some differences between spoken and written Hindi,
-support for transliteration of Hindi texts makes no sense and is therefore
-not a planned feature.
+However, there is an one-way transcription mode that can be used to transcript
+Devanagari Hindi texts to the Latin alphabet (see below).
 
 
 .SH OPTIONS
@@ -55,6 +54,16 @@ is
 the contents of the standard input shall be read.
 .RE
 
+.BR \-o
+.IR FILE ,
+.B \-\-output
+.I FILE
+.RS 4
+The output file. When the
+.I FILE
+is not specified, the standard output shall be used.
+.RE
+
 .BR \-r ,
 .B \-\-reverse
 .RS 4
@@ -66,6 +75,14 @@ Use reverse transliteration (from Latin to Devanagari).
 .RS 4
 Transcript a Devanagari text into Czech using only the characters of the Czech
 alphabet (an experimental feature).
+.RE
+
+.BR \-H ,
+.B \-\-hindi
+.RS 4
+Transcript a Hindi text from Devanagari into the Latin alphabet. This mode is
+irreversible as it uses just phonetic transcription instead of lossless
+transliteration.
 .RE
 
 .BR \-e ,
@@ -124,13 +141,24 @@ but using the
 switch, reverse transliteration can be performed, converting romanised texts
 back into Devanagari.
 
+
+.SS Transcription
+Alternatively, there are two transcription modes.
+When the
+.B -H
+flag is used, the input will be handled as a Hindi text and transcripted into
+the Roman alphabet, ignoring the
+.I IAST
+diacritics. 
+
 Alternatively, when the flag
 .B -c
 is used, the input can be transcripted for usage in the Czech language,
 limiting the used characters to the common characters of the Czech alphabet
-and applying some phonetic changes. Note: this transformation is not
-unambiguous and it is therefore not possible to recover the original Devanagari
-version again.
+and applying some phonetic changes.
+
+Note: neither of the transcription modes is unambiguous and it is therefore
+not possible to recover the original Devanagari version again.
 
 
 .SS Velthuis Encoding
@@ -156,7 +184,8 @@ be encoded to ‘ā’, ‘.rr’ to ‘ṝ’ and so on.
 
 .SH SEE ALSO
 .BR ascii (7),
-.BR utf8 (7).
+.BR utf8 (7),
+.I http://mirrors.ctan.org/language/devanagari/velthuis/doc/manual.pdf
 
 
 .SH FURTHER INFORMATION
@@ -183,7 +212,7 @@ report it on the GitLab issues tracker:
 
 
 .SH LICENSE AND WARRANTY
-Copyright © 2018-2021  Vlasta Vesely
+Copyright © 2018-2022  Vlasta Vesely
 .RI < vlastavesely@protonmail.ch >.
 
 This program is free software; you can redistribute it and/or modify it under
