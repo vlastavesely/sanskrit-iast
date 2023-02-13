@@ -116,6 +116,16 @@ START_TEST(test_velthuis)
 }
 END_TEST
 
+START_TEST(test_harvard)
+{
+	test_output("./iast \"RtaM\" -k", "ṛtaṃ\n");
+	test_output("./iast \"RtaM\" --harvard", "ṛtaṃ\n");
+
+	/* force Devanagari output */
+	test_output("./iast \"agnIH zatruH shatruH\" -kd", "अग्नीः शत्रुः शत्रुः\n");
+}
+END_TEST
+
 START_TEST(test_ascii)
 {
 	test_output("./iast \"अग्निमीळे पुरोहितं\" -a", "agnimii.le purohita.m\n");
@@ -177,6 +187,7 @@ void register_integration_tests(TCase *test_case)
 	tcase_add_test(test_case, test_transcript_czech);
 	tcase_add_test(test_case, test_transcript_hindi);
 	tcase_add_test(test_case, test_velthuis);
+	tcase_add_test(test_case, test_harvard);
 	tcase_add_test(test_case, test_ascii);
 	tcase_add_test(test_case, test_file_output);
 	tcase_add_test(test_case, test_version);

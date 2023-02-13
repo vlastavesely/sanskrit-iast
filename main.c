@@ -3,14 +3,16 @@
 #include "czech.h"
 #include "hindi.h"
 #include "velthuis.h"
+#include "harvard-kyoto.h"
 #include "config.h"
 
-#define FLAG_REVERSE	1 << 0
-#define FLAG_VELTHUIS	1 << 1
-#define FLAG_CZECH	1 << 2
-#define FLAG_HINDI	1 << 3
-#define FLAG_ASCII	1 << 4
-#define FLAG_DEVANAGARI	1 << 5
+#define FLAG_REVERSE    1 << 0
+#define FLAG_VELTHUIS   1 << 1
+#define FLAG_CZECH      1 << 2
+#define FLAG_HINDI      1 << 3
+#define FLAG_ASCII      1 << 4
+#define FLAG_DEVANAGARI 1 << 5
+#define FLAG_HARVARD    1 << 6
 
 static const char *usage_str =
 	PROGNAME ", a helper for Sanskrit transliteration.\n"
@@ -23,6 +25,7 @@ static const char *usage_str =
 	"  -o, --output      the output file (instead of standard input)\n"
 	"  -r, --reverse     reverse transliteration (from Latin to Devanagari)\n"
 	"  -e, --encode      convert an ASCII text to IAST using the Velthuis scheme\n"
+	"  -k, --harvard     convert an ASCII text to IAST using the Harvard-Kyoto scheme\n"
 	"  -a, --ascii       convert a Devanagari text to Velthuis text rather than to IAST\n"
 	"  -d, --devanagari  when encoding, output a Devanagari text rather than IAST\n"
 	"  -c, --czech       transcript Devanagari to Czech language (experimental)\n"
@@ -42,7 +45,7 @@ static const char *usage_str =
 	"\n"
 	"  For more information see the iast(1) manual page.\n";
 
-static const char *short_opts = "f:o:readcHhv";
+static const char *short_opts = "f:o:rekadcHhv";
 
 static const struct option long_opts[] = {
 	{"file",       required_argument,  0, 'f'},
@@ -50,6 +53,7 @@ static const struct option long_opts[] = {
 	{"reverse",    no_argument,        0, 'r'},
 	{"encode",     no_argument,        0, 'e'},
 	{"velthuis",   no_argument,        0, 'e'},
+	{"harvard",    no_argument,        0, 'k'},
 	{"ascii",      no_argument,        0, 'a'},
 	{"devanagari", no_argument,        0, 'd'},
 	{"czech",      no_argument,        0, 'c'},
@@ -98,6 +102,21 @@ static int velthuis_encode(const char *in, char **out, unsigned int flags)
 	return ret;
 }
 
+static int harvard_encode(const char *in, char **out, unsigned int flags)
+{
+	char *tmp = NULL;
+	int ret;
+
+	ret = encode_harvard_kyoto_to_iast(in, out);
+	if (flags & FLAG_DEVANAGARI) {
+		ret = transliterate_latin_to_devanagari(*out, &tmp);
+		free(*out);
+		*out = tmp;
+	}
+
+	return ret;
+}
+
 static int iast_transliterate(const char *in, char **out, unsigned int flags)
 {
 	char *tmp = NULL;
@@ -126,6 +145,9 @@ static int process_input(const char *input, char **out, unsigned int flags)
 
 	if (flags & FLAG_VELTHUIS)
 		return velthuis_encode(input, out, flags);
+
+	if (flags & FLAG_HARVARD)
+		return harvard_encode(input, out, flags);
 
 	return iast_transliterate(input, out, flags);
 }
@@ -243,6 +265,9 @@ int main(int argc, const char **argv)
 			break;
 		case 'e':
 			flags |= FLAG_VELTHUIS;
+			break;
+		case 'k':
+			flags |= FLAG_HARVARD;
 			break;
 		case 'a':
 			flags |= FLAG_ASCII;
