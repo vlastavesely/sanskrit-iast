@@ -3,6 +3,7 @@
 #include "czech.h"
 #include "hindi.h"
 #include "velthuis.h"
+#include "harvard-kyoto.h"
 #include "utf8.h"
 #include "integration.h"
 
@@ -18,6 +19,7 @@ static Suite *create_test_suite()
 	register_transcript_czech_tests(test_case);
 	register_transcript_hindi_tests(test_case);
 	register_velthuis_encoder_tests(test_case);
+	register_harvard_kyoto_encoder_tests(test_case);
 	register_utf8_tests(test_case);
 
 	register_integration_tests(test_case);
