@@ -18,9 +18,9 @@ START_TEST(test_harvard_kyoto_encoding)
 {
 	test_harvard_kyoto("saMskRtam", "saṃskṛtam");
 	test_harvard_kyoto("yogaH", "yogaḥ");
-	test_harvard_kyoto("zaastraM shaastram", "śāstraṃ śāstram");
+	test_harvard_kyoto("zaastraM zAstram", "śāstraṃ śāstram");
 	test_harvard_kyoto("liGga yajJa varNa", "liṅga yajña varṇa");
-	test_harvard_kyoto("Aaa Iii Uuu RR R L", "āā īī ūū ṝ ṛ ḷ");
+	test_harvard_kyoto("Aaa Iii Uuu RR R L lR lRR", "āā īī ūū ṝ ṛ ḷ ḷ ḹ");
 }
 END_TEST
 

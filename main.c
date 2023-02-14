@@ -54,6 +54,7 @@ static const struct option long_opts[] = {
 	{"encode",     no_argument,        0, 'e'},
 	{"velthuis",   no_argument,        0, 'e'},
 	{"harvard",    no_argument,        0, 'k'},
+	{"kyoto",      no_argument,        0, 'k'},
 	{"ascii",      no_argument,        0, 'a'},
 	{"devanagari", no_argument,        0, 'd'},
 	{"czech",      no_argument,        0, 'c'},

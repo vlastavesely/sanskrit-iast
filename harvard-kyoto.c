@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-/* https://en.wikipedia.org/wiki/Velthuis */
+/* https://en.wikipedia.org/wiki/Harvard-Kyoto */
 
 #include "compat.h"
 #include "harvard-kyoto.h"
@@ -11,33 +11,32 @@ struct encoder_tuple {
 };
 
 static const struct encoder_tuple table[] = {
-	{"A",  "\u0101"},
-	{"I",  "\u012b"},
-	{"U",  "\u016b"},
-	{"RR", "\u1e5d"},
-	{"R",  "\u1e5b"},
-	{"LL", "\u1e39"},
-	{"L",  "\u1e37"},
+	{"A",   "\u0101"},
+	{"I",   "\u012b"},
+	{"U",   "\u016b"},
+	{"RR",  "\u1e5d"},
+	{"R",   "\u1e5b"},
+	{"lRR", "\u1e39"},
+	{"lR",  "\u1e37"},
 
 	{"aa",  "\u0101"},
 	{"ii",  "\u012b"},
 	{"uu",  "\u016b"},
-	{".rr", "\u1e5d"},
-	{".r",  "\u1e5b"},
-	{".ll", "\u1e39"},
-	{".l",  "\u1e37"},
 
-	{"M",  "\u1e43"},
-	{"H",  "\u1e25"},
+	{"M",   "\u1e43"},
+	{"H",   "\u1e25"},
 
-	{"G",  "\u1e45"},
-	{"J",  "\u00f1"},
-	{"T",  "\u1e6d"},
-	{"D",  "\u1e0d"},
-	{"N",  "\u1e47"},
-	{"S",  "\u1e63"},
-	{"sh", "\u015b"},
-	{"z",  "\u015b"}
+	{"G",   "\u1e45"},
+	{"J",   "\u00f1"},
+	{"T",   "\u1e6d"},
+	{"D",   "\u1e0d"},
+	{"N",   "\u1e47"},
+	{"S",   "\u1e63"},
+	{"z",   "\u015b"},
+
+	/* not defined by the standard */
+	{"LL",  "\u1e39"},
+	{"L",   "\u1e37"}
 };
 
 static const struct encoder_tuple *find_tuple(const char *text)

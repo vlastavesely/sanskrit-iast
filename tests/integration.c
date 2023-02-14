@@ -120,9 +120,10 @@ START_TEST(test_harvard)
 {
 	test_output("./iast \"RtaM\" -k", "ṛtaṃ\n");
 	test_output("./iast \"RtaM\" --harvard", "ṛtaṃ\n");
+	test_output("./iast \"RtaM\" --kyoto", "ṛtaṃ\n");
 
 	/* force Devanagari output */
-	test_output("./iast \"agnIH zatruH shatruH\" -kd", "अग्नीः शत्रुः शत्रुः\n");
+	test_output("./iast \"agnIH zatruH\" -kd", "अग्नीः शत्रुः\n");
 }
 END_TEST
 
