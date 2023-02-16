@@ -1,9 +1,19 @@
-PROGNAME = @PROGNAME@
+PROGNAME      = @PROGNAME@
+
+VERSION       = @PACKAGE_VERSION@
+VERSION_FULL  = $(VERSION)
+VERSION_MAJOR = $(firstword $(subst ., ,$(VERSION)))
+
 LIBNAME  = lib@PROGNAME@
 ANAME    = $(LIBNAME).a
+LINKNAME = $(LIBNAME).so
+SONAME   = $(LIBNAME).so.$(VERSION_MAJOR)
+REALNAME = $(LIBNAME).so.$(VERSION_FULL)
+LIBFILES = $(ANAME) $(LINKNAME) $(SONAME) $(REALNAME)
 
 CC              = @CC@
 AR              = @AR@
+LN_S            = @LN_S@
 INSTALL         = @INSTALL@
 INSTALL_DATA    = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -14,6 +24,7 @@ exec_prefix = @exec_prefix@
 bindir      = @bindir@
 libdir      = @libdir@
 datarootdir = @datarootdir@
+includedir  = @includedir@
 mandir      = @mandir@
 
 USE_GCOV = @USE_GCOV@
@@ -26,6 +37,8 @@ TEST_LFLAGS = @CHECK_LIBS@ @COVERAGE_LFLAGS@
 
 OBJECTS = transliteration.o czech.o hindi.o utf8.o velthuis.o harvard-kyoto.o
 
+INCLUDES = harvard-kyoto.h transliteration.h velthuis.h
+
 TEST_OBJECTS = tests/main.o tests/translit.o tests/czech.o		\
 	tests/hindi.o tests/velthuis.o tests/harvard-kyoto.o		\
 	tests/utf8.o tests/integration.o
@@ -33,7 +46,7 @@ TEST_OBJECTS = tests/main.o tests/translit.o tests/czech.o		\
 AUX_FILES = Makefile configure aclocal.m4 install-sh config.h* *.log	\
 	*.status *.cache
 
-all: $(PROGNAME) tests/test $(PROGNAME).1.gz
+all: $(PROGNAME) $(LIBFILES) tests/test $(PROGNAME).1.gz
 
 include $(wildcard *.d tests/*.d)
 
@@ -42,6 +55,15 @@ $(PROGNAME): main.o $(ANAME)
 
 $(ANAME): $(OBJECTS)
 	$(QUIET_AR) $(AR) rcs $@ $^
+
+$(REALNAME): $(OBJECTS)
+	$(QUIET_LD) $(CC) $^ -shared -o $@ $(LFLAGS)
+
+$(SONAME): $(REALNAME)
+	$(QUIET_LN) $(LN_S) -f $< $@
+
+$(LINKNAME): $(SONAME)
+	$(QUIET_LN) $(LN_S) -f $< $@
 
 test: all
 	tests/test
@@ -58,20 +80,39 @@ tests/test: $(OBJECTS) $(TEST_OBJECTS)
 %.1.gz: %.1
 	$(QUIET_GEN) cat $< | gzip -f >$@
 
-install:
+install: install-prog install-lib install-dev
+
+install-prog:
 	$(MKDIR_P) $(bindir) $(libdir) $(mandir)/man1
 	$(INSTALL_PROGRAM) $(PROGNAME) $(bindir)
-	$(INSTALL_DATA) $(ANAME) $(libdir)
 	$(INSTALL_DATA) $(PROGNAME).1.gz $(mandir)/man1
 
-uninstall:
+install-lib:
+	$(MKDIR_P) $(libdir)
+	cp -P $(REALNAME) $(SONAME) $(libdir)
+
+install-dev:
+	$(MKDIR_P) $(includedir)/iast $(libdir)
+	$(INSTALL_DATA) $(INCLUDES) $(includedir)/iast
+	$(INSTALL_DATA) iast.h $(includedir)
+	cp -P $(ANAME) $(LINKNAME) $(libdir)
+
+uninstall: uninstall-prog uninstall-lib uninstall-dev
+
+uninstall-prog:
 	$(RM) $(bindir)/$(PROGNAME)
-	$(RM) $(libdir)/$(ANAME)
 	$(RM) $(mandir)/man1/$(PROGNAME).1.gz
+
+uninstall-lib:
+	$(RM) $(libdir)/$(ANAME) $(libdir)/$(SONAME) $(libdir)/$(REALNAME)
+
+uninstall-dev:
+	$(RM) -r $(includedir)/iast $(includedir)/iast.h
 
 clean:
 	$(RM) $(PROGNAME) tests/test $(PROGNAME).1.gz
-	$(RM) -r *.a *.o */*.o */*.d *.d *.gcda *.gcno tests/coverage */*.test
+	$(RM) -r $(LIBFILES) *.o */*.o */*.d *.d
+	$(RM) *.gcda *.gcno tests/coverage */*.test
 
 clean-aux:
 	$(RM) -r $(AUX_FILES)
@@ -92,5 +133,6 @@ ifndef V
 QUIET_CC    = @echo "  CC     $@";
 QUIET_LD    = @echo "  CCLD   $@";
 QUIET_AR    = @echo "  AR     $@";
+QUIET_LN    = @echo "  LN     $@";
 QUIET_GEN   = @echo "  GEN    $@";
 endif
