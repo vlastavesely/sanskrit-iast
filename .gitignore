@@ -3,6 +3,7 @@
 *.d
 *.so
 *.so.*
+*.pc
 /iast
 /tests/test
 /tests/coverage

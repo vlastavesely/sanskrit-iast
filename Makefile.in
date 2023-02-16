@@ -19,13 +19,14 @@ INSTALL_DATA    = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 MKDIR_P         = @MKDIR_P@
 
-prefix      = @prefix@
-exec_prefix = @exec_prefix@
-bindir      = @bindir@
-libdir      = @libdir@
-datarootdir = @datarootdir@
-includedir  = @includedir@
-mandir      = @mandir@
+prefix       = @prefix@
+exec_prefix  = @exec_prefix@
+bindir       = @bindir@
+libdir       = @libdir@
+datarootdir  = @datarootdir@
+includedir   = @includedir@
+pkgconfigdir = @pkgconfigdir@
+mandir       = @mandir@
 
 USE_GCOV = @USE_GCOV@
 
@@ -92,9 +93,10 @@ install-lib:
 	cp -P $(REALNAME) $(SONAME) $(libdir)
 
 install-dev:
-	$(MKDIR_P) $(includedir)/iast $(libdir)
+	$(MKDIR_P) $(includedir)/iast $(libdir) $(pkgconfigdir)
 	$(INSTALL_DATA) $(INCLUDES) $(includedir)/iast
 	$(INSTALL_DATA) iast.h $(includedir)
+	$(INSTALL_DATA) $(PROGNAME).pc $(pkgconfigdir)
 	cp -P $(ANAME) $(LINKNAME) $(libdir)
 
 uninstall: uninstall-prog uninstall-lib uninstall-dev
@@ -108,10 +110,11 @@ uninstall-lib:
 
 uninstall-dev:
 	$(RM) -r $(includedir)/iast $(includedir)/iast.h
+	$(RM) $(pkgconfigdir)/$(PROGNAME).pc
 
 clean:
 	$(RM) $(PROGNAME) tests/test $(PROGNAME).1.gz
-	$(RM) -r $(LIBFILES) *.o */*.o */*.d *.d
+	$(RM) -r $(LIBFILES) *.o */*.o */*.d *.d $(PROGNAME).pc
 	$(RM) *.gcda *.gcno tests/coverage */*.test
 
 clean-aux:
