@@ -1,0 +1,22 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: dependencies
+      run: sudo apt update && sudo apt install -y autoconf make gcc lcov check pkg-config
+    - name: configure
+      run: sh autogen.sh && ./configure
+    - name: make
+      run: make
+    - name: maketest
+      run: make test
