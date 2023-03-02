@@ -1,4 +1,4 @@
-.TH "iast" "1" "10 January 2022" "sanskrit-iast" "Sanskrit Transliteration"
+.TH "iast" "1" "02 March 2023" "sanskrit-iast" "Sanskrit Transliteration"
 
 .SH NAME
 .B iast
@@ -98,6 +98,19 @@ representation using the
 scheme.
 .RE
 
+.BR \-k ,
+.BR \-\-harvard ,
+.BR \-\-kyoto
+.RS 4
+Convert a plain
+.BR ASCII (7)
+string to the
+.I IAST
+representation using the
+.I Harvard-Kyoto
+scheme.
+.RE
+
 .BR \-a ,
 .B \-\-ascii
 .RS 4
@@ -149,7 +162,7 @@ When the
 flag is used, the input will be handled as a Hindi text and transcripted into
 the Roman alphabet, ignoring the
 .I IAST
-diacritics. 
+diacritics.
 
 Alternatively, when the flag
 .B -c
@@ -201,14 +214,17 @@ Wikipedia:
 .br
 .I https://en.wikipedia.org/wiki/Velthuis
 - the Velthuis scheme.
+.br
+.I https://en.wikipedia.org/wiki/Harvard-Kyoto
+- the Harvard-Kyoto scheme.
 .RE
 
 
 .SH REPORTING BUGS
 If you encounter a bug, you should make sure that you are using the latest
 version of the software. If you are and the bug is still present, you can
-report it on the GitLab issues tracker:
-.IR https://gitlab.com/vlastavesely/sanskrit-iast/issues .
+report it on the GitHub issues tracker:
+.IR https://github.com/vlastavesely/sanskrit-iast/issues .
 
 
 .SH LICENSE AND WARRANTY
