@@ -8,6 +8,7 @@
 #define SCHWA_CHARACTER   'a'
 #define ZERO_WIDTH_JOINER 0x200d
 #define VIRAMA            0x094d
+#define AUM               0x0950
 #define CHUNKSIZE         1024
 
 static struct translit_letter table[] = {
@@ -257,6 +258,14 @@ int transliterate_latin_to_devanagari(const char *latin, char **ret)
 				next = letter_by_data(src + 3);
 				if (last || (next && next->type == VOWEL && next->code != 0x090c)) {
 					letter = letter_by_code(0x0933); /* .la */
+				}
+			}
+
+			if (letter->code == AUM) {
+				/* ‘aum’ is followed by something else than
+				 * a whitespace → it is ‘au’ + ‘m…’ */
+				if (!isspace(src[3]) && src[3] != '\0') {
+					letter = letter_by_code(0x0914);
 				}
 			}
 encode_consonant:

@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <getopt.h>
+#include <ctype.h>
 #include <errno.h>
 
 #define ARRAY_SIZE(a) sizeof(a) / sizeof(*a)

@@ -67,6 +67,11 @@ START_TEST(test_translit_lla_sylable)
 }
 END_TEST
 
+START_TEST(test_translit_aum)
+{
+	test_translit("ॐ औम औमे तौमे ॐ", "aum auma aume taume aum");
+}
+
 START_TEST(test_translit_candrabindu)
 {
 	test_translit("तान्यजत्राँ", "tānyajatrām̐");
@@ -84,6 +89,7 @@ void register_translit_tests(TCase *test_case)
 	tcase_add_test(test_case, test_translit_words);
 	tcase_add_test(test_case, test_translit_vedic);
 	tcase_add_test(test_case, test_translit_lla_sylable);
+	tcase_add_test(test_case, test_translit_aum);
 	tcase_add_test(test_case, test_translit_candrabindu);
 	tcase_add_test(test_case, test_translit_zero_width_joiner);
 }
