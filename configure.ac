@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([sanskrit-iast], [3.0.0], [vlastavesely@protonmail.ch])
+AC_INIT([sanskrit-iast], [3.1.0], [vlastavesely@protonmail.ch])
 AC_CONFIG_SRCDIR([transliteration.c])
 AC_CONFIG_HEADERS([config.h])
 

@@ -58,7 +58,7 @@ $(ANAME): $(OBJECTS)
 	$(QUIET_AR) $(AR) rcs $@ $^
 
 $(REALNAME): $(OBJECTS)
-	$(QUIET_LD) $(CC) $^ -shared -o $@ $(LFLAGS)
+	$(QUIET_LD) $(CC) $^ -shared -Wl,-soname=$(SONAME) -o $@ $(LFLAGS)
 
 $(SONAME): $(REALNAME)
 	$(QUIET_LN) $(LN_S) -f $< $@
@@ -84,7 +84,7 @@ tests/test: $(OBJECTS) $(TEST_OBJECTS)
 install: install-prog install-lib install-dev
 
 install-prog:
-	$(MKDIR_P) $(bindir) $(libdir) $(mandir)/man1
+	$(MKDIR_P) $(bindir) $(mandir)/man1
 	$(INSTALL_PROGRAM) $(PROGNAME) $(bindir)
 	$(INSTALL_DATA) $(PROGNAME).1.gz $(mandir)/man1
 

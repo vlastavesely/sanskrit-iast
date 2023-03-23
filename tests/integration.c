@@ -152,7 +152,7 @@ END_TEST
 
 START_TEST(test_version)
 {
-	test_output("./iast -v", "iast v3.0.0\n");
+	test_output("./iast -v", "iast v3.1.0\n");
 }
 END_TEST
 
