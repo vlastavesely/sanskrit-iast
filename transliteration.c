@@ -36,6 +36,7 @@ static struct translit_letter table[] = {
 	{0x0902, CODA, "\u1e43"},        /* anusvara (.m) */
 	{0x0903, CODA, "\u1e25"},        /* visarga (.h) */
 	{0x093d, CODA, "'"},             /* avagrada (') */
+	{0x093d, CODA, "’"},             /* avagrada (’) - typographic */
 	{0x0901, CODA, "m\u0310"},       /* candrabindu */
 
 	/* Consonants */

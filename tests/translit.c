@@ -23,6 +23,18 @@ static void test_translit(const char *devanagari, const char *latin)
 	free(b);
 }
 
+static void test_translit_latin(const char *latin, const char *devanagari)
+{
+	char *str;
+	int ret;
+
+	ret = transliterate_latin_to_devanagari(latin, &str);
+	ck_assert_int_eq(0, ret);
+	ck_assert_str_eq(devanagari, str);
+
+	free(str);
+}
+
 START_TEST(test_translit_words)
 {
 	/* https://en.wikipedia.org/wiki/Sanskrit */
@@ -72,6 +84,12 @@ START_TEST(test_translit_aum)
 	test_translit("ॐ औम औमे तौमे ॐ", "aum auma aume taume aum");
 }
 
+START_TEST(test_translit_avagraha)
+{
+	test_translit_latin("śivo'ham", "शिवोऽहम्");
+	test_translit_latin("śivo’ham", "शिवोऽहम्");
+}
+
 START_TEST(test_translit_candrabindu)
 {
 	test_translit("तान्यजत्राँ", "tānyajatrām̐");
@@ -90,6 +108,7 @@ void register_translit_tests(TCase *test_case)
 	tcase_add_test(test_case, test_translit_vedic);
 	tcase_add_test(test_case, test_translit_lla_sylable);
 	tcase_add_test(test_case, test_translit_aum);
+	tcase_add_test(test_case, test_translit_avagraha);
 	tcase_add_test(test_case, test_translit_candrabindu);
 	tcase_add_test(test_case, test_translit_zero_width_joiner);
 }
