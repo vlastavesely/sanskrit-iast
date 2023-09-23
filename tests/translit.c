@@ -64,6 +64,9 @@ START_TEST(test_translit_vedic)
 
 	/* vedic stresses */
 	test_translit("अ॒ग्निमी॑ळे पु॒रोहि॑तं", "a\\_gnimī\\'ḷe pu\\_rohi\\'taṃ");
+
+	/* double svarita */
+	test_translit("अ॒ग्निमी᳚ळे", "a\\_gnimī\\\"ḷe");
 }
 END_TEST
 

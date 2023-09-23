@@ -107,6 +107,7 @@ static struct translit_letter table[] = {
 	{0x0964, CODA, "|"},             /* danda */
 
 	{0x0951, CODA, "\\'"},           /* svarita */
+	{0x1cda, CODA, "\\\""},          /* double svarita */
 	{0x0952, CODA, "\\_"}            /* anudatta */
 };
 
