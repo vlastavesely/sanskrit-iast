@@ -3,6 +3,10 @@
 #ifndef __TRANSLITERATION_H
 #define __TRANSLITERATION_H
 
+#if defined (__cplusplus)
+extern "C" {
+#endif
+
 enum translit_letter_type {
 	VOWEL,
 	CONSONANT,
@@ -29,5 +33,9 @@ static inline int is_devanagari(unsigned int code)
 {
 	return code >= 0x0900 && code <= 0x097f;
 }
+
+#if defined (__cplusplus)
+}
+#endif
 
 #endif /* __TRANSLITERATION_H */
