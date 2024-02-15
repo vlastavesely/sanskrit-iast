@@ -17,6 +17,8 @@
 /aclocal.m4
 /install-sh
 /config.h*
+/config.sub
+/config.guess
 /*.status
 /*.cache
 /*.log
