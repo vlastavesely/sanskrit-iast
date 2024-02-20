@@ -8,9 +8,9 @@ romanises Sanskrit texts written in Devanagari using the IAST scheme;
 alternatively it can be used for reverse transliteration of IAST encoded texts
 into Devanagari.
 
-Given to the fact that the IAST standard handles only the classic Sanskrit
+Given the fact that the IAST standard handles only the classic Sanskrit
 character set, it cannot be used for lossless transliteration of modern Hindi.
-It can, however, be used for lossy transcription of Hindi.
+It can, however, be used for transcription of Hindi (which is lossy).
 
 For more details on the usage of the program and the requirements for the input
 data, see the included manual page iast(1).
